@@ -1,0 +1,30 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dip"
+    android:orientation="horizontal" >
+
+    <TextView
+        android:id="@+id/labelled_edit_box_label"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="top"
+        android:paddingRight="20dip" 
+        android:minWidth="180dip"
+        android:text="Question?"/>
+
+    <EditText
+        android:id="@+id/labelled_edit_box_value"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:autoText="false"
+        android:background="?android:attr/editTextBackground"
+        android:gravity="top"
+        android:inputType="text|textCapSentences"
+        android:minWidth="250dip"
+        android:scrollHorizontally="true"
+        android:textColorLink="@color/light_blue" />
+
+</LinearLayout>

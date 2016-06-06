@@ -1,0 +1,32 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dip"
+    android:orientation="horizontal" >
+
+    <TextView
+        android:id="@+id/labelled_spinner_label"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="top"
+        android:paddingRight="20dip" 
+        android:minWidth="180dip"
+        android:text="Question?"/>
+
+
+
+    <Spinner
+        android:id="@+id/labelled_spinner_value"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="55dip"
+        android:gravity="top"
+        android:textColor="#000"
+        android:minWidth="250dip"
+    />
+
+</LinearLayout>

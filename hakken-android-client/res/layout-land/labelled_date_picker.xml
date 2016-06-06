@@ -1,0 +1,36 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_height="wrap_content"
+    android:layout_width="fill_parent"
+    android:layout_marginTop="5dip">
+    <TextView
+        android:id="@+id/labelled_date_picker_label"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="top"
+        android:paddingRight="20dip" 
+        android:minWidth="180dip"/>
+    
+    <EditText
+        android:id="@+id/labelled_date_picker_value"
+        android:singleLine="true"
+        android:layout_width="0dip"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"        
+        android:minWidth="250dip"
+        android:scrollHorizontally="true"
+        android:capitalize="none"
+        android:gravity="top"
+        android:autoText="false"
+        android:editable="false"
+        android:inputType="text"/>
+    
+    <Button
+        android:id="@+id/labelled_date_picker_button"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="top"
+        android:background="@drawable/calendar" />
+</LinearLayout>

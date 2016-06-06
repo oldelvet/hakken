@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">  
+      
+    <style name="WindowTitleTextStyle">
+        <item name="android:textSize">@dimen/theme_window_title_size</item>
+        <item name="android:textColor">@color/off_white</item>
+        <item name="android:textStyle">bold</item>
+    </style>    
+    
+    <style name="TitleTextStyle">
+        <item name="android:textSize">@dimen/theme_title_size</item>
+        <item name="android:textColor">@color/blue_bold</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    
+    <style name="SubTitleTextStyle">
+        <item name="android:textSize">@dimen/theme_subtitle_size</item>
+        <item name="android:textColor">@color/blue_bold</item>
+        <item name="android:textStyle">bold</item>
+    </style>    
+
+    <style name="HeaderTextStyle">
+        <item name="android:textSize">@dimen/theme_header_size</item>
+        <item name="android:textColor">@color/transparent_black</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    
+    <style name="NormalTextStyle">
+        <item name="android:textSize">@dimen/theme_text_size</item>
+        <item name="android:textColor">@color/light_grey</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+    
+    <style name="ActivityAssistant" parent="@android:Theme.Light"> 
+<!--         <item name="android:windowTitleBackgroundStyle">@style/TitleBackgroundStyle</item> -->
+        <item name="android:windowTitleStyle">@style/WindowTitleTextStyle</item>
+        <item name="android:windowTitleSize">@dimen/window_title_size</item>
+<!--         <item name="android:windowBackground">@color/light_blue</item> -->
+        <item name="android:textSize">@dimen/theme_text_size</item>
+<!--         <item name="android:textColor">@color/text_colour</item> -->
+    </style>
+    
+    
+</resources>

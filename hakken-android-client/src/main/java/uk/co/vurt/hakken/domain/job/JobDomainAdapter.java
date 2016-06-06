@@ -1,0 +1,122 @@
+package uk.co.vurt.hakken.domain.job;
+
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import uk.co.vurt.hakken.R;
+import uk.co.vurt.hakken.providers.Job;
+import android.content.Context;
+import android.database.Cursor;
+import android.support.v4.widget.SimpleCursorAdapter;
+import android.text.Html;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+public class JobDomainAdapter extends SimpleCursorAdapter {
+
+	LayoutInflater inflater;
+	
+	public JobDomainAdapter(Context context, int layout, Cursor cursor,
+			String[] from, int[] to, int flag) {
+		super(context, layout, cursor, from, to, flag);
+		this.inflater = LayoutInflater.from(context);
+	}
+
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+		ViewHolder holder;
+		
+		if(convertView == null){
+			convertView = inflater.inflate(R.layout.selectjob_list_item, null);
+			holder = new ViewHolder();
+			holder.header = (TextView) convertView.findViewById(R.id.joblist_section_header);			
+			holder.name = (TextView) convertView.findViewById(R.id.joblist_entry_name);
+			holder.duedate = (TextView) convertView.findViewById(R.id.joblist_entry_duedate);
+			holder.duetime = (TextView) convertView.findViewById(R.id.joblist_entry_duetime);
+			holder.status = (ImageView) convertView.findViewById(R.id.joblist_entry_completed);
+			holder.notes = (TextView) convertView.findViewById(R.id.joblist_entry_notes);
+			holder.description = (TextView) convertView.findViewById(R.id.joblist_entry_description);
+			
+			convertView.setTag(holder);
+			
+		} else {
+			holder = (ViewHolder)convertView.getTag();
+		}
+		Cursor cursor = getCursor();
+		if(cursor != null){
+			cursor.moveToPosition(position);
+			String group = cursor.getString(cursor.getColumnIndex(Job.Definitions.GROUP)); //looking up column positions like this is probably just as inefficient as when you do it with JDBC
+			String name = cursor.getString(cursor.getColumnIndex(Job.Definitions.NAME));
+			String status = cursor.getString(cursor.getColumnIndex(Job.Definitions.STATUS));
+			String notes = cursor.getString(cursor.getColumnIndex(Job.Definitions.NOTES));
+			String description = cursor.getString(cursor.getColumnIndex(Job.Definitions.DESCRIPTION));
+			
+			Log.d("CK TAG", "Notes: " + notes + " " + Job.Definitions.DESCRIPTION);
+			
+			long duedate = cursor.getLong(cursor.getColumnIndex(Job.Definitions.DUE));
+			
+			String previousGroup = null;
+			
+			//find out what the previous item's(if there was one) group is
+			if(cursor.getPosition() > 0 && cursor.moveToPrevious()){
+				previousGroup = cursor.getString(cursor.getColumnIndex(Job.Definitions.GROUP)); //compounding one inefficiency with another...
+				cursor.moveToNext();
+			}
+			
+	
+			if(group.equals(previousGroup)){
+				//if the groups match, hide the header
+				holder.header.setVisibility(View.GONE);
+			} else {
+				//show the header
+				holder.header.setText(group + " Tasks");
+				holder.header.setVisibility(View.VISIBLE);
+			}
+			
+			holder.name.setText(name);
+
+			holder.notes.setText((notes != null ? Html.fromHtml(notes) : ""));
+			holder.description.setText((description != null ? Html.fromHtml(description) : ""));
+
+			//format the date for display
+			SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm");
+			SimpleDateFormat sdfDate = new SimpleDateFormat("dd/MM/yy");
+			holder.duedate.setText(sdfDate.format(new Date(duedate)));
+			holder.duetime.setText(sdfTime.format(new Date(duedate)));
+			
+			
+			//set the appropriate status indicator
+			if("COMPLETED".equals(status)){
+				holder.status.setImageResource(R.drawable.orange_star);
+			}else if("SERVER_ERROR".equals(status)){
+				holder.status.setImageResource(R.drawable.red_warning);
+			}else if("UPDATING".equals(status)){
+				holder.status.setImageResource(R.drawable.refresh);
+			}else{
+				holder.status.setImageResource(R.drawable.outline_star);
+			}
+		}
+		return convertView;
+	}
+
+
+	/**
+	 * This needs to reflect the xml used to define the list item view.
+	 * @author giles.paterson
+	 *
+	 */
+	static class ViewHolder {
+		TextView header;		
+		TextView name;
+		TextView duedate;
+		TextView duetime;
+		ImageView status;
+		TextView notes;
+		TextView description;
+	}
+}

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="transparent_black">#6000</color>
+    <color name="text_colour">#FFFFFF</color>
+    <color name="light_blue">#00ddff</color>    
+    <color name="light_grey">#aaaaaa</color>
+    <color name="off_white">#aaaaaa</color>
+    <color name="white_smoke">#F5F5F5</color>
+    
+    <color name="blue_bold">#0099CC</color>
+    <color name="blue_washed">#33B5E5</color>
+    <color name="blue_mid">#33B5E5</color>                
+</resources>
