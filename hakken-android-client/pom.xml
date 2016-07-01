@@ -243,4 +243,24 @@
             </build>
         </profile>
 	</profiles>
+  <repositories>
+    <repository>
+      <id>thirdparty</id>
+      <name>Thirdparty Repository</name>
+      <url>http://repo.example.org/nexus/content/repositories/thirdparty</url>
+    </repository>
+  </repositories>
+  <distributionManagement>
+    <snapshotRepository>
+      <id>snapshots</id>
+      <name>WMFS Snapshots Repository</name>
+      <url>http://repo.example.org/nexus/content/repositories/wmfs-snapshots</url>
+    </snapshotRepository>
+    <repository>
+      <id>releases</id>
+      <name>WMFS Releases Repository</name>
+      <url>http://repo.example.org/nexus/content/repositories/wmfs-release</url>
+    </repository>
+  </distributionManagement>
+
 </project>
