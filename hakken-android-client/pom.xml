@@ -112,6 +112,7 @@
 
 	<build>
 		<finalName>hakken</finalName>
+                <sourceDirectory>${project.basedir}/app/src/main/java</sourceDirectory>
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -130,11 +131,11 @@
 						<sdk>
 							<platform>${android.platform}</platform>
 						</sdk>
-						<androidManifestFile>${project.basedir}/AndroidManifest.xml</androidManifestFile>
-						<sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
-						<assetsDirectory>${project.basedir}/assets</assetsDirectory>
-						<resourceDirectory>${project.basedir}/res</resourceDirectory>
-						<nativeLibrariesDirectory>${project.basedir}/src/main/native</nativeLibrariesDirectory>
+						<androidManifestFile>${project.basedir}/app/src/main/AndroidManifest.xml</androidManifestFile>
+						<sourceDirectory>${project.basedir}/app/src/main/java</sourceDirectory>
+						<assetsDirectory>${project.basedir}/app/src/main/assets</assetsDirectory>
+						<resourceDirectory>${project.basedir}/app/src/main/res</resourceDirectory>
+						<nativeLibrariesDirectory>${project.basedir}/app/src/main/native</nativeLibrariesDirectory>
 						<deleteConflictingFiles>true</deleteConflictingFiles>
 						<undeployBeforeDeploy>true</undeployBeforeDeploy>
 					</configuration>
