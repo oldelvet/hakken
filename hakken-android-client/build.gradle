@@ -11,5 +11,7 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        maven { url 'http://www.example.com/nexus/content/repositories/wmfs-snapshots' }
+        maven { url 'http://www.example.com/nexus/content/repositories/wmfs-releases'   }
     }
 }
