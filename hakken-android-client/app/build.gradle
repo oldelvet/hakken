@@ -1,0 +1,34 @@
+apply plugin: 'com.android.application'
+android {
+    compileSdkVersion 16
+    buildToolsVersion "24.0.0"
+
+    defaultConfig {
+        applicationId "uk.co.vurt.hakken"
+        minSdkVersion 10
+        targetSdkVersion 13
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/ASL2.0'
+    }
+}
+repositories {
+}
+
+dependencies {
+    compile group: 'net.wmfs.coalesce', name: 'net.wmfs.coalesce.csql', version: '0.1'
+    compile group: 'uk.co.vurt.hakken', name: 'hakken-domain', version: '1.2.0-SNAPSHOT', transitive: false
+    compile group: 'uk.co.vurt.hakken', name: 'hakken-security', version: '1.2.0-SNAPSHOT', transitive: false
+    compile 'com.android.support:support-v4:24.0.0'
+    compile 'com.google.code.gson:gson:2.2.4'
+    compile group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.6', transitive: true
+}
