@@ -4,6 +4,7 @@ public class LabelledValue {
 
 	String label;
 	String value;
+	Boolean singleSelect;
 	
 	public String getLabel() {
 		return label;
@@ -20,7 +21,16 @@ public class LabelledValue {
 	public void setValue(String value) {
 		this.value = value;
 	}
+	
+	public Boolean getSingleSelect() {
+		return singleSelect;
+	}
 
+	public void setSingleSelect(Boolean singleSelect) {
+		this.singleSelect = singleSelect;
+	}
+
+	
 	@Override
 	public String toString() {
 		return "LabelledValue [label=" + label + ", value=" + value + "]";
