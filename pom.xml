@@ -120,33 +120,34 @@
       <id>thirdparty</id>
       <name>Thirdparty Repository</name>
       <url>http://repo.example.org/nexus/content/repositories/thirdparty</url>
+      
     </repository>
     <repository>
       <id>wmfs-snapshots</id>
       <name>WMFS Snapshots Repository</name>
-      <url>http://repo.example.org/nexus/content/repositories/wmfs-snapshots</url>
+      <url>http://archiva.wmfs.net/maven/repository/snapshots/</url>
     </repository>
     <repository>
       <id>wmfs-releases</id>
       <name>WMFS Releases Repository</name>
-      <url>http://repo.example.org/nexus/content/repositories/wmfs-releases</url>
+      <url>http://archiva.wmfs.net/maven/repository/internal/</url>
     </repository>
     <repository>
       <id>other</id>
       <name>Other Repository</name>
-      <url>http://repo.example.org/nexus/content/repositories/public</url>
+      <url>C:\Users\chris.keep\.m2\repository</url>
     </repository>
   </repositories>
   <distributionManagement>
     <snapshotRepository>
       <id>snapshots</id>
       <name>WMFS Snapshots Repository</name>
-      <url>http://repo.example.org/nexus/content/repositories/wmfs-snapshots</url>
+      <url>http://archiva.wmfs.net/maven/repository/snapshots/</url>
     </snapshotRepository>
     <repository>
       <id>releases</id>
       <name>WMFS Releases Repository</name>
-      <url>http://repo.example.org/nexus/content/repositories/wmfs-releases</url>
+      <url>http://archiva.wmfs.net/maven/repository/internal/</url>
     </repository>
   </distributionManagement>
 
