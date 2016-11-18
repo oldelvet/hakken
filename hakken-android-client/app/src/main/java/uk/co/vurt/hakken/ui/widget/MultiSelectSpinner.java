@@ -92,7 +92,7 @@ public class MultiSelectSpinner extends Spinner implements
 	}
 
 	public String getSpinnerText(){
-		Log.d(TAG, "getSpinnerText() callled");
+		Log.d(TAG, "getSpinnerText() called");
 		int numSelected = 0;
         if(selected != null){
         	

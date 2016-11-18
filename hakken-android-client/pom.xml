@@ -254,12 +254,12 @@
     <snapshotRepository>
       <id>snapshots</id>
       <name>WMFS Snapshots Repository</name>
-      <url>http://repo.example.org/nexus/content/repositories/wmfs-snapshots</url>
+      <url>http://archiva.wmfs.net/maven/repository/snapshots/</url>
     </snapshotRepository>
     <repository>
       <id>releases</id>
       <name>WMFS Releases Repository</name>
-      <url>http://repo.example.org/nexus/content/repositories/wmfs-release</url>
+      <url>http://archiva.wmfs.net/maven/repository/internal/</url>
     </repository>
   </distributionManagement>
 
