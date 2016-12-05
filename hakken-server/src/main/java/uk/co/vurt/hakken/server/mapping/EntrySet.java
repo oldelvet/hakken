@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -28,7 +29,7 @@ public class EntrySet implements Serializable{
 	
 	
 //	@OneToMany(targetEntity=EntrySet.class, mappedBy="serviceMappingId")
-	@ManyToOne
+	@ManyToOne(cascade = {CascadeType.ALL})
 	protected ServiceMapping serviceMappingId;
 	
 	protected String entryKey;
