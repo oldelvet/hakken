@@ -40,8 +40,18 @@
 			<basic name="jobId">
 				<column name="job_id" />
 			</basic>
-			<!-- <element-collection name="dataItems"> <collection-table name="submission_dataitems" 
-				> <join-column name="submission_id"/> </collection-table> </element-collection> -->
+
+			<basic name="timestamp">
+				<column name="sub_timestamp" />
+			</basic>
+			
+			<basic name="remoteId">
+				<column name="remote_id" />
+			</basic>
+			
+			<basic name="status">
+				<column name="status" />
+			</basic>
 
 			<one-to-many name="dataItems">
 				<join-table name="submission_dataitems">

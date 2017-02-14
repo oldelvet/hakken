@@ -5,4 +5,6 @@ import uk.co.vurt.hakken.domain.job.Submission;
 public interface SubmissionDAO extends AbstractDAO<Long, Submission> {
 
 	public Submission getByJobId(Long jobId);
+	
+	public Submission getByRemoteId(String remoteId);
 }

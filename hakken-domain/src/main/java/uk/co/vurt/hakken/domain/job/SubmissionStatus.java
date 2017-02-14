@@ -1,5 +1,9 @@
 package uk.co.vurt.hakken.domain.job;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class SubmissionStatus {
 
 	public enum ErrorType {
@@ -9,6 +13,7 @@ public class SubmissionStatus {
 	private boolean valid = false;
 	private String message;
 	private ErrorType type;
+	@JsonIgnore private String uid;
 
 	public boolean isValid() {
 		return valid;
@@ -32,6 +37,14 @@ public class SubmissionStatus {
 
 	public void setType(ErrorType type) {
 		this.type = type;
+	}
+
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
 
 }

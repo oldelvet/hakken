@@ -56,15 +56,18 @@ public class SubmissionController extends RESTController{
 			logger.info("Received submission from " + username);
 			logger.info(submission.toString());
 	
+			//Persist the submission in the Hakken audit tables
 			service.store(submission);
 
+			// Try to submit the 
 			status = service.submit(submission);
+			
 			
 			logger.debug("Submission status: " + status );
 			
-			//if sent to dataconnector successfully, then update submission entry
-			//use a separate audit table for this?
-			//service.setStatus(status);
+			// If sent to dataconnector successfully, then update submission entry
+			service.setStatus(submission, status);
+			
 		}else {
 			logger.warn("Woop Woop! Invalid request received!");
 			throw new HakkenException("Invalid request received");

@@ -2,6 +2,7 @@ package uk.co.vurt.hakken.domain.job;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Submission implements Serializable {
@@ -14,6 +15,8 @@ public class Submission implements Serializable {
 	private String remoteId;
 	private String taskDefinitionName;
 	private List<DataItem> dataItems;
+	private Date timestamp;
+	private String status;
 	
 	public Submission(){
 		dataItems = new ArrayList<DataItem>();
@@ -83,7 +86,23 @@ public class Submission implements Serializable {
         this.remoteId = remoteId;
     }
 
-    @Override
+	public Date getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(Date timestamp) {
+		this.timestamp = timestamp;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	@Override
 	public String toString() {
 		return "Submission [username=" + username + ", jobId=" + jobId
 				+ ", remoteId=" + remoteId + ", dataItems=" + dataItems + "]";

@@ -25,4 +25,17 @@ public class SubmissionJpaDAO extends AbstractJpaDAO<Long, Submission>
 			return null;
 		}
 	}
+	
+	
+	@Override
+	public Submission getByRemoteId(String remoteId) {
+		Query query = entityManager.createQuery("from " + clazz.getName() + " where remoteId = :remoteId");
+		query.setParameter("remoteId", remoteId);
+		List<Submission> submissions = query.getResultList();
+		if(submissions.size() > 0){
+			return submissions.get(0);
+		}else{
+			return null;
+		}
+	}	
 }

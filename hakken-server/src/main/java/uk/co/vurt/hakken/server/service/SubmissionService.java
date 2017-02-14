@@ -14,4 +14,6 @@ public interface SubmissionService extends Service<Long, Submission> {
 	void delete(long id);
 	
 	SubmissionStatus submit(Submission submission);
+	
+	void setStatus(Submission submission, SubmissionStatus status);
 }

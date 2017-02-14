@@ -71,7 +71,7 @@ public class SubmissionServiceImpl implements SubmissionService {
 				dataItemDao.save(dataItem);
 			}
 		}
-		Submission existing = submissionDao.getByJobId(submission.getJobId());
+		Submission existing = submissionDao.getByRemoteId(submission.getRemoteId());
 		if (existing != null) {
 			submission.setId(existing.getId());
 			logger.debug("Updating submission for job " + submission.getJobId()
@@ -112,17 +112,36 @@ public class SubmissionServiceImpl implements SubmissionService {
 				serviceMapping.getTaskToConnectorMappings(),
 				taskRegistry.getTask(submission.getTaskDefinitionName()),
 				dcTaskDefMapping.getTaskDefinitionName());
+		
+				
 		logService.log(
 				submission.getUsername(),
-				"Submitted job "
+				"Submitted job ["
 						+ submission.getJobId()
-						+ ". Status: "
+						+ "] UId: [" 
+						+ status.getUid() 
+						+ "] Status: "
 						+ status
 						+ (!status.isValid() ? " Error: " + status.getMessage()
 								: ""));
 		return status;
 	}
 
+	
+	
+	public void setStatus(Submission submission, SubmissionStatus status) {
+		// Update the submission 
+		
+		submission.setRemoteId(status.getUid());
+				
+		submission.setStatus(!status.isValid() ? " Error: " + status.getMessage()
+								: "Submitted");
+		
+		// Save the updated submission
+		submissionDao.update(submission);
+	}
+	
+	
 	@Autowired
 	public void setLogService(LogService logService) {
 		this.logService = logService;
