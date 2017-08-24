@@ -78,12 +78,14 @@ public class SubmissionServiceImpl implements SubmissionService {
 					+ ", " + existing.getId());
 			submissionDao.update(submission);
 			logService.log(submission.getUsername(), "Updated submission "
-					+ submission.getId() + " job: " + submission.getJobId());
+					+ submission.getId() + " job: " + submission.getJobId() 
+					+ " report: " + submission.getRemoteId());
 		} else {
 			logger.debug("Saving new submission.");
 			submissionDao.save(submission);
 			logService.log(submission.getUsername(), "New submission "
-					+ submission.getId() + " job: " + submission.getJobId());
+					+ submission.getId() + " job: " + submission.getJobId()
+					+ " report: " + submission.getRemoteId());
 		}
 	}
 
@@ -116,7 +118,9 @@ public class SubmissionServiceImpl implements SubmissionService {
 				
 		logService.log(
 				submission.getUsername(),
-				"Submitted job ["
+				"Submitted job [ReportId: " 
+						+ submission.getRemoteId()
+						+ "] Job: [" 
 						+ submission.getJobId()
 						+ "] UId: [" 
 						+ status.getUid() 
