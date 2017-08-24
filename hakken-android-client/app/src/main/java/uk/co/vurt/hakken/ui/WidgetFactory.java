@@ -118,7 +118,7 @@ public class WidgetFactory {
 							? true
 							: false);
 			widget = checkBox;
-		} else if ("SELECT".equals(item.getType())) {
+		} else if ("SELECT".equals(item.getType()) || "SELECT_RADIO".equals(item.getType())) {
 			boolean multiSelect = false;
 			if(item.getAttributes() != null && item.getAttributes().containsKey("multiselect")){
 				Log.d(TAG, "multiselect: " + item.getAttributes().get("multiselect"));				
@@ -145,7 +145,7 @@ public class WidgetFactory {
 			List<NameValue> selected = new ArrayList<NameValue>();
 			List<LabelledValue> values = item.getValues();
 			for(LabelledValue value: values){
-				NameValue nameValue = new NameValue(value.getLabel(), value.getValue());
+				NameValue nameValue = new NameValue(value.getLabel(), value.getValue(), value.getSingleSelect());
 				if(dataItemValues.contains(value.getValue())){
 					selected.add(nameValue);
 				}

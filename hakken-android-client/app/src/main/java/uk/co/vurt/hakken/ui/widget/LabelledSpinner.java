@@ -103,6 +103,27 @@ public class LabelledSpinner extends AbstractLabelledWidget implements Serializa
 		return selectedValues;
 	}
 
+	public Boolean validateSelectedValues(){
+		List<NameValue> selectedItems = getSelectedNameValues();
+		String[] selectedValues = new String[selectedItems.size()];
+		int i = 0;
+		int singleSelectCount = 0;
+		for(NameValue item: selectedItems){
+			selectedValues[i] = item.getValue();
+			Log.d(TAG, "SingleSelect Status: " + item.getSingleSelect());
+			if (item.getSingleSelect() != null && item.getSingleSelect() == true) {
+				singleSelectCount++;
+			}
+			i++;
+		}
+		Log.d(TAG, "CK Validate checkbox lists: [selected]" + i + " [singleSelect] " + singleSelectCount);
+		if (singleSelectCount > 0 &&  i > 1) {
+			return false;
+		} {
+			return true;
+		}
+	}
+
 	public boolean isMultiSelect() {
 		return multiSelect;
 	}

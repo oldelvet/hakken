@@ -102,10 +102,10 @@ public class SelectorActivity extends TabCompatActivity implements OnJobSelected
 			ContentValues values = new ContentValues();
 			info = manager.getPackageInfo(this.getPackageName(), 0);
 						
-			message = "PackageName = " + info.packageName + 
-				     "\nVersionCode = " + info.versionCode + 
-				     "\nVersionName = " + info.versionName +
-				     "\nLastSync = " + info.lastUpdateTime; // values.getAsString("SYNC_DATE_TIME");  
+			message = "Package Name = " + info.packageName +
+				     "\nVersion Code = " + info.versionCode +
+				     "\nVersion Name = " + info.versionName +
+				     "\nLast Sync = " + info.lastUpdateTime; // values.getAsString("SYNC_DATE_TIME");
 			
 		} catch (NameNotFoundException e) {
 			message = "Unable to retrieve package info.";

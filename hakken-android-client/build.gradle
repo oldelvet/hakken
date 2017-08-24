@@ -11,7 +11,8 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
-        maven { url 'http://www.example.com/nexus/content/repositories/wmfs-snapshots' }
-        maven { url 'http://www.example.com/nexus/content/repositories/wmfs-releases'   }
+        maven { url 'http://archiva.wmfs.net/maven/repository/snapshots/' }
+        maven { url 'http://archiva.wmfs.net/maven/repository/internal/'   }
+        mavenLocal()
     }
 }

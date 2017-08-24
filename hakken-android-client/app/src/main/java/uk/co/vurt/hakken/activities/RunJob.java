@@ -247,27 +247,35 @@ public class RunJob extends Activity {
 								// Need to set the actual value of the item
 								item.setValue(value);
 							}
-						}												
+						}
 					} else if ("DATETIME".equals(item.getType())) {
 						LabelledDatePicker datePicker = (LabelledDatePicker) widget;
 						value = datePicker.getValue();
 					} else if ("YESNO".equals(item.getType())) {
 						LabelledCheckBox checkBox = (LabelledCheckBox) widget;
 						value = Boolean.toString(checkBox.getValue());
-					} else if ("SELECT".equals(item.getType())) {
+					} else if (("SELECT".equals(item.getType())) || ("SELECT_RADIO".equals(item.getType()))) {
 						LabelledSpinner spinner = (LabelledSpinner) widget;
 						if (spinner.isMultiSelect()) {
-							// serialise values to a comma separated list.
-							String[] values = spinner.getSelectedValues();
-							StringBuffer valueBuffer = new StringBuffer();
-							for (int i = 0; i < values.length; i++) {
-								valueBuffer.append(values[i]);
-								if (i < values.length - 1) {
-									valueBuffer.append(",");
+
+							// Check to see if selected items are allowed
+							if (spinner.validateSelectedValues() == false) {
+								validationMessage = "The selected items contradict each other. Items marked with an asterisk can only be selected on their own. Please adjust your selection, ensuring that this is the case.";
+								valid = false;
+							} else {
+								// serialise values to a comma separated list.
+								String[] values = spinner.getSelectedValues();
+								StringBuffer valueBuffer = new StringBuffer();
+								for (int i = 0; i < values.length; i++) {
+									valueBuffer.append(values[i]);
+									if (i < values.length - 1) {
+										valueBuffer.append(",");
+									}
 								}
+								value = valueBuffer.toString();
+								valueBuffer = null;
 							}
-							value = valueBuffer.toString();
-							valueBuffer = null;
+							// Not a multi-select item
 						} else {
 							value = spinner.getSelectedValue();
 						}
@@ -373,6 +381,8 @@ public class RunJob extends Activity {
 		
 		// CK: START CODE
 		// Check Page validation
+		// Validation is triggered if the condition provided by the task page is validated as true.
+		// Only one validation statement is permitted per page.
 		if(page.getAttributes() != null && 
 				page.getAttributes().containsKey("validation")){
 			
@@ -381,7 +391,7 @@ public class RunJob extends Activity {
 			try {
 				boolean validationResult = jobProcessor.evaluateCondition(validation); 
 				
-				if (!validationResult) {
+				if (validationResult) {
 					// Set alert message
 					validationMessage = page.getAttributes().get("validation-message");
 					valid = false;
