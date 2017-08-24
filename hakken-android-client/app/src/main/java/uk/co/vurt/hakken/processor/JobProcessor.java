@@ -331,6 +331,11 @@ public class JobProcessor {
 		values.put(Dataitem.Definitions.VALUE, dataItem.getValue());
 		values.put(Dataitem.Definitions.SUBMIT, goodToSubmit);
 
+		Log.d(TAG, String.valueOf(getJobId()));
+		Log.d(TAG, dataItem.getPageName());
+		Log.d(TAG, dataItem.getName());
+		Log.d(TAG, dataItem.getType());
+
 		Cursor cursor = contentResolver
 				.query(Dataitem.Definitions.CONTENT_URI,
 						new String[] { Dataitem.Definitions._ID },

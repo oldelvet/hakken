@@ -3,17 +3,18 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:title="Settings">
     <PreferenceCategory android:title="Sync Settings">
-<!--         <EditTextPreference android:key="sync_server" -->
-<!--             android:title="@string/settings_sync_server_label" -->
-<!--             android:dialogTitle="@string/settings_sync_server_prompt" -->
-<!--             android:defaultValue="http://appsdev.wmfs.net:8280/taskhelper_server"/> -->
+         <EditTextPreference android:key="sync_server"
+             android:title="@string/settings_sync_server_label"
+             android:dialogTitle="@string/settings_sync_server_prompt"
+             android:defaultValue="http://apps.wmfs.net:8280/hakken"/>
 <!--         <EditTextPreference android:key="sync_server" -->
 <!--                             android:title="@string/settings_sync_server_label" -->
 <!--                             android:dialogTitle="@string/settings_sync_server_prompt" -->
 <!--                             android:defaultValue="http://sfrs-coalesce.staffsfire.gov.uk:8280/hakken"/> -->
-        <EditTextPreference android:key="sync_server"
+<!--        <EditTextPreference android:key="sync_server"
                             android:title="@string/settings_sync_server_label"
                             android:dialogTitle="@string/settings_sync_server_prompt"
-                            android:defaultValue=""/>        
+                            android:defaultValue=""/>
+-->
     </PreferenceCategory>
 </PreferenceScreen>

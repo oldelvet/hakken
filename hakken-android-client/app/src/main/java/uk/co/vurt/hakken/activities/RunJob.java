@@ -258,23 +258,24 @@ public class RunJob extends Activity {
 						LabelledSpinner spinner = (LabelledSpinner) widget;
 						if (spinner.isMultiSelect()) {
 
+							// serialise values to a comma separated list.
+							String[] values = spinner.getSelectedValues();
+							StringBuffer valueBuffer = new StringBuffer();
+							for (int i = 0; i < values.length; i++) {
+								valueBuffer.append(values[i]);
+								if (i < values.length - 1) {
+									valueBuffer.append(",");
+								}
+							}
+							value = valueBuffer.toString();
+							valueBuffer = null;
+
 							// Check to see if selected items are allowed
 							if (spinner.validateSelectedValues() == false) {
 								validationMessage = "The selected items contradict each other. Items marked with an asterisk can only be selected on their own. Please adjust your selection, ensuring that this is the case.";
 								valid = false;
-							} else {
-								// serialise values to a comma separated list.
-								String[] values = spinner.getSelectedValues();
-								StringBuffer valueBuffer = new StringBuffer();
-								for (int i = 0; i < values.length; i++) {
-									valueBuffer.append(values[i]);
-									if (i < values.length - 1) {
-										valueBuffer.append(",");
-									}
-								}
-								value = valueBuffer.toString();
-								valueBuffer = null;
 							}
+
 							// Not a multi-select item
 						} else {
 							value = spinner.getSelectedValue();
