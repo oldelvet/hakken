@@ -21,6 +21,7 @@ import android.util.Log;
 import java.io.IOException;
 
 import uk.co.vurt.hakken.Constants;
+import uk.co.vurt.hakken.authenticator.Authenticator;
 import uk.co.vurt.hakken.providers.Dataitem;
 import uk.co.vurt.hakken.providers.Job;
 import uk.co.vurt.hakken.providers.Task;
@@ -268,6 +269,7 @@ public class LogoutProcessorFragment extends Fragment implements AccountManagerC
             Log.i(TAG, "AuthenticationException during account remove", e);
             result = LogoutState.FAILED;
         }
+        Authenticator.setRemoveAllowed(false);
         status = result;
         updateListeners();
     }
@@ -310,7 +312,12 @@ public class LogoutProcessorFragment extends Fragment implements AccountManagerC
                 Account[] accounts = mAccountManager.getAccountsByType(Constants.ACCOUNT_TYPE); //retrieve all Hakken accounts
                 if (accounts.length >= 0) {
                     for (Account account : accounts) {
-                        mAccountManager.removeAccountExplicitly(account);
+                        try {
+                            Authenticator.setRemoveAllowed(true);
+                            mAccountManager.removeAccountExplicitly(account);
+                        } finally {
+                            Authenticator.setRemoveAllowed(false);
+                        }
                     }
                 }
             } else {
@@ -331,6 +338,7 @@ public class LogoutProcessorFragment extends Fragment implements AccountManagerC
             status = value;
             updateListeners();
             if (LogoutState.REMOVING_ACCOUNT.equals(status)) {
+                Authenticator.setRemoveAllowed(true);
                 Account[] accounts = mAccountManager.getAccountsByType(Constants.ACCOUNT_TYPE); //retrieve all Hakken accounts
                 if (accounts.length >= 0) {
                     for (Account account : accounts) {

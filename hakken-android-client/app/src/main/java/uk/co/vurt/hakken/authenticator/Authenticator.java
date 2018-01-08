@@ -24,6 +24,7 @@ import android.accounts.AbstractAccountAuthenticator;
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorResponse;
 import android.accounts.AccountManager;
+import android.accounts.NetworkErrorException;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -47,10 +48,15 @@ import android.widget.Toast;
  * that prompts the user for their login information.
  */
 
-class Authenticator extends AbstractAccountAuthenticator {
+public class Authenticator extends AbstractAccountAuthenticator {
 	
 	private static final String TAG = "Authenticator";
-	
+
+	/** Lock protecting changes to remove allowed lock. */
+	private static final Object mRemoveAllowedLock = new Object();
+	/** Remove allowed flag. */
+	private static boolean mRemoveAllowed;
+
     // Authentication Service context
     private final Context context;
 
@@ -197,4 +203,23 @@ class Authenticator extends AbstractAccountAuthenticator {
         return bundle;
     }
 
+    @Override
+    public Bundle getAccountRemovalAllowed(AccountAuthenticatorResponse response, Account account)
+    throws NetworkErrorException {
+        Bundle bundle = new Bundle();
+        synchronized (mRemoveAllowedLock) {
+            bundle.putBoolean(AccountManager.KEY_BOOLEAN_RESULT, mRemoveAllowed);
+        }
+        return bundle;
+    }
+
+    /**
+     * Setup the remove allowed flag.
+     * @param removeAllowed if true then remove is allowed
+     */
+    public static void setRemoveAllowed(boolean removeAllowed) {
+        synchronized (mRemoveAllowedLock) {
+            mRemoveAllowed = removeAllowed;
+        }
+    }
 }
