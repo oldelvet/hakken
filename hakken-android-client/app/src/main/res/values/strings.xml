@@ -63,7 +63,8 @@
 	<string name="menu_sync_label">Sync</string>
 	<string name="menu_settings_label">Settings</string>
 	<string name="menu_version_label">Information</string>
-	
+	<string name="menu_logout">Logout</string>
+
 	<string name="settings_sync_server_label">Sync Server</string>
 	<string name="settings_sync_server_prompt">Specify the server to sync with.</string>
 

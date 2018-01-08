@@ -88,6 +88,10 @@ public class SelectorActivity extends TabCompatActivity implements OnJobSelected
 	    	case R.id.version:
 	    		showVersionInfo();
 	    		return true;
+			case R.id.logout:
+				finish();
+				startActivity(new Intent(this, LogoutActivity.class));
+				return true;
 	    	default:
 	    		return super.onOptionsItemSelected(item);
 	    }

@@ -9,5 +9,8 @@
           android:icon="@drawable/ic_menu_manage"/>
     <item android:id="@+id/version"
           android:title="@string/menu_version_label"
-          android:icon="@drawable/ic_menu_manage"/>  
+          android:icon="@drawable/ic_menu_manage"/>
+    <item android:id="@+id/logout"
+        android:title="@string/menu_logout"
+        android:icon="@drawable/ic_menu_manage"/>
 </menu>
