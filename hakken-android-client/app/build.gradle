@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 android {
     compileSdkVersion 26
+    useLibrary "org.apache.http.legacy"
 
     defaultConfig {
         applicationId "uk.co.vurt.hakken"
