@@ -3,6 +3,16 @@ package uk.co.vurt.hakken.domain.task.pageitem;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.As;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+
+@JsonTypeInfo(use=Id.NAME, include=As.PROPERTY, property="type", defaultImpl=PageItem.class, visible=true)
+@JsonSubTypes({
+	@Type(value=PageMultiItem.class, name="MULTI")
+})
 public class PageItem {
 
 	String name;
