@@ -79,4 +79,14 @@
 		<item quantity="one">One item selected</item>
 		<item quantity="other">%d items selected</item>
 	</plurals>
+
+	<!-- Logout -->
+    <string name="title_activity_logout">Logout</string>
+	<string name="logout_complete">Logout Completed</string>
+	<string name="logout_failed">Logout Failed</string>
+	<string name="logout_are_you_sure">Are you sure?</string>
+	<string name="logout_confirm">Confirm Logout</string>
+	<string name="logout">Logout</string>
+	<string name="performing_logout">Performing Logout</string>
+    <string name="logout_message">Use \"Logout\" to synchronise any outstanding tasks and to remove user specific Task Helper data from the device.</string>
 </resources>

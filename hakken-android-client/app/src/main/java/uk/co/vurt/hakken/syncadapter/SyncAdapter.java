@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.json.JSONException;
 
@@ -43,9 +44,27 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
 	private static final String TAG = "SyncAdapter";
 	private static final String LAST_UPDATED_KEY = "uk.co.vurt.hakken.syncadapter.lastUpdated";
 	private static final boolean NOTIFY_AUTH_FAILURE = true;
-	
+
+	/** Synchronisation progress sequence. */
+	private static final AtomicInteger syncSequence = new AtomicInteger(0);
+
 	private final AccountManager accountManager;
 	private final Context context;
+
+	/**
+	 * @return read the current synchronisation sequence number
+	 */
+	public static int readSyncSequence() {
+		return syncSequence.get();
+	}
+
+    /**
+     * Update the current synchronisation sequence.
+     * To be used after a sync completes or fails.
+     */
+	public static void updateSyncSequence() {
+	    syncSequence.incrementAndGet();
+    }
 
 	public SyncAdapter(Context context, boolean autoInitialize) {
 		super(context, autoInitialize);
@@ -152,6 +171,9 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
 			
 		}catch(Exception e){
 			handleException(e, authToken, syncResult);
+		} finally {
+		    // Update to signal that a synchronisation has taken place
+            updateSyncSequence();
 		}
 	}
 	
