@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="app_name">Task Helper</string>
-	
+
 	<string name="label">TaskHelper</string>
 
     <string name="run_activity_title">Run Task</string>
-    
-    <string name="job_list_title">Your Job List</string>
-    
+
+	<string name="job_list_title">Your Job List</string>
 
 	<!-- Permission label -->
 	<string name="permlab_hakkensyncadapterAuthPassword">access to passwords for TaskHelper accounts
@@ -40,7 +39,7 @@
 	<!-- Button to sign in after entering username and password -->
 	<string name="login_activity_ok_button">Sign in</string>
 	<!-- Message shown in dialog if the username or password is invalid. -->
-	<string name="login_activity_loginfail_text_both">The username or password isn\'t valid. 
+	<string name="login_activity_loginfail_text_both">The username or password isn\'t valid.
 		A TaskHelper account is required. Please try again. </string>
 	<!-- Message shown in dialog if the password is invalid -->
 	<string name="login_activity_loginfail_text_pwonly">You entered the wrong password or your account has
@@ -60,24 +59,24 @@
 	<string name="cancel_button_label">Cancel</string>
 	<string name="profile_action">Sample profile</string>
 	<string name="view_profile">View Profile</string>
-	
+
 	<string name="menu_sync_label">Sync</string>
 	<string name="menu_settings_label">Settings</string>
 	<string name="menu_version_label">Information</string>
 	
 	<string name="settings_sync_server_label">Sync Server</string>
 	<string name="settings_sync_server_prompt">Specify the server to sync with.</string>
-	
+
 	<string name="preferences_ok_button">OK</string>
-	
+
 	<!-- Tab labels -->
 	<string name="tab_jobs">To Do List</string>
 	<string name="tab_task_definitions">New Workbooks</string>
-	
+
 	<!-- Spinner -->
 	<string name="spinner_none_selected">None</string>
 	<plurals name="spinner_selected">
-	    <item quantity="one">One item selected</item>
-	    <item quantity="other">%d items selected</item>
+		<item quantity="one">One item selected</item>
+		<item quantity="other">%d items selected</item>
 	</plurals>
 </resources>
