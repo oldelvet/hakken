@@ -1,12 +1,11 @@
 apply plugin: 'com.android.application'
 android {
-    compileSdkVersion 16
-    buildToolsVersion "24.0.0"
+    compileSdkVersion 26
 
     defaultConfig {
         applicationId "uk.co.vurt.hakken"
-        minSdkVersion 10
-        targetSdkVersion 13
+        minSdkVersion 14
+        targetSdkVersion 14
     }
 
     buildTypes {
@@ -25,10 +24,11 @@ repositories {
 }
 
 dependencies {
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     compile group: 'net.wmfs.coalesce', name: 'net.wmfs.coalesce.csql', version: '0.1'
     compile group: 'uk.co.vurt.hakken', name: 'hakken-domain', version: '1.2.0-SNAPSHOT', transitive: false
     compile group: 'uk.co.vurt.hakken', name: 'hakken-security', version: '1.2.0-SNAPSHOT', transitive: false
-    compile 'com.android.support:support-v4:24.0.0'
+    compile 'com.android.support:support-v4:26.0.0'
     compile 'com.google.code.gson:gson:2.2.4'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.8.8', transitive: true
 }
