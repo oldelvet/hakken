@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.http.auth.AuthenticationException;
 import org.json.JSONException;
 
 import uk.co.vurt.hakken.Constants;
@@ -244,7 +243,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
 	}
 	
 
-	private synchronized void syncTaskDefinitions(Account account, String authToken, ContentProviderClient provider) throws AuthenticatorException, IOException, RemoteException, AuthenticationException, ParseException, JSONException {
+	private synchronized void syncTaskDefinitions(Account account, String authToken, ContentProviderClient provider) throws AuthenticatorException, IOException, RemoteException, ParseException, JSONException {
 		Log.d(TAG, "syncTaskDefintions() called.");
 		
 		List<Long> oldDefinitionIds = new ArrayList<Long>();
@@ -267,7 +266,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
 		
 	}
 	
-	private synchronized void syncJobsFromServer(Account account, String authToken, ContentProviderClient provider) throws AuthenticatorException, IOException, RemoteException, AuthenticationException, ParseException, JSONException {
+	private synchronized void syncJobsFromServer(Account account, String authToken, ContentProviderClient provider) throws AuthenticatorException, IOException, RemoteException, ParseException, JSONException {
 		
 		List<JobDefinitionId> oldJobIds = new ArrayList<JobDefinitionId>();
 		
@@ -322,14 +321,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
 	      } else if (e instanceof IOException) {
 	          Log.e(TAG, "IOException", e);
 	          syncResult.stats.numIoExceptions++;
-	      } else if (e instanceof AuthenticationException) {
-	          accountManager.invalidateAuthToken(AuthenticatorActivity.PARAM_AUTHTOKEN_TYPE, authtoken);
-	          // The numAuthExceptions require user intervention and are
-	          // considered hard errors.
-	          // We automatically get a new hash, so let's make SyncManager retry
-	          // automatically.
-	          syncResult.stats.numIoExceptions++;
-	          Log.e(TAG, "AuthenticationException", e);
 	      } else if (e instanceof RemoteException){
 	    	  syncResult.stats.numIoExceptions++;
 	    	  Log.e(TAG, "RemoteException", e);
@@ -373,8 +364,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter{
 			return addedDefinitionIds;
 		}
 	}
-	
-	
+
 	private class JobDefinitionAdapter implements JobDefinitionHandler {
 
 		private ContentProviderClient provider;

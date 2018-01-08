@@ -159,10 +159,6 @@ final public class NetworkUtilities {
 					if (loginJson.has("token")) {
 						response.setToken(loginJson.getString("token"));
 					}
-				} catch (org.apache.http.ParseException e) {
-					response.setSuccess(false);
-					response.setReason(e.getMessage());
-					Log.e(TAG, "Unable to parse login response", e);
 				} catch (JSONException e) {
 					response.setSuccess(false);
 					response.setReason(e.getMessage());
