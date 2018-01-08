@@ -1,30 +1,20 @@
 package uk.co.vurt.hakken.client;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.NameValuePair;
-import org.apache.http.auth.AuthenticationException;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.params.ConnManagerParams;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -42,6 +32,7 @@ import android.accounts.Account;
 import android.content.Context;
 import android.net.ParseException;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 final public class NetworkUtilities {
@@ -85,23 +76,45 @@ final public class NetworkUtilities {
 				.getString("sync_server", null);
 	}
 
-	/**
-	 * Configures the httpClient to connect to the URL provided.
-	 */
-	public static HttpClient getHttpClient(Integer timeout) {
-		HttpClient httpClient = new DefaultHttpClient();
-		final HttpParams params = httpClient.getParams();
-		if (timeout == null) {
-			timeout = REQUEST_TIMEOUT_MS;
-		}
-		HttpConnectionParams.setConnectionTimeout(params, timeout);
-		HttpConnectionParams.setSoTimeout(params, timeout);
-		ConnManagerParams.setTimeout(params, timeout);
-		return httpClient;
+	private static HttpURLConnection getURLConnection(String urival)
+	throws IOException {
+		URI uri = URI.create(urival);
+		URL url = uri.toURL();
+		HttpURLConnection urlConnection = (HttpURLConnection)url.openConnection();
+		urlConnection.setRequestProperty("User-Agent", USER_AGENT);
+		urlConnection.setConnectTimeout(REQUEST_TIMEOUT_MS);
+		urlConnection.setReadTimeout(REQUEST_TIMEOUT_MS);
+		return urlConnection;
 	}
 
-	public static HttpClient getHttpClient() {
-		return getHttpClient(REQUEST_TIMEOUT_MS);
+	private static void sendPostData(OutputStream os, String stringOutput) throws IOException {
+		OutputStreamWriter osw = new OutputStreamWriter(os, "UTF-8");
+		try {
+			osw.write(stringOutput);
+		} finally {
+			if (osw != null) {
+				osw.close();
+			}
+			if (os != null) {
+				os.close();
+			}
+		}
+	}
+
+	@NonNull
+	private static String readStringResponse(HttpURLConnection urlConnection) throws IOException {
+		StringBuilder sb = new StringBuilder();
+		final int bufferSize = 1024;
+		char[] buffer = new char[bufferSize];
+		Reader in = new InputStreamReader(urlConnection.getInputStream(), "UTF-8");
+		while (true) {
+			int rsz = in.read(buffer, 0, buffer.length);
+			if (rsz < 0) {
+				break;
+			}
+			sb.append(buffer, 0, rsz);
+		}
+		return sb.toString();
 	}
 
 	/**
@@ -111,8 +124,6 @@ final public class NetworkUtilities {
 	 *            The user's username
 	 * @param password
 	 *            The user's password
-	 * @param handler
-	 *            The hander instance from the calling UI thread.
 	 * @param context
 	 *            The context of the calling Activity.
 	 * @return boolean The boolean result indicating whether the user was
@@ -121,39 +132,25 @@ final public class NetworkUtilities {
 	public static LoginResponse authenticate(Context context, String username,
 			String password) {
 
-		final HttpResponse resp;
-		final ArrayList<NameValuePair> params = new ArrayList<NameValuePair>();
-		params.add(new BasicNameValuePair(PARAM_USERNAME, username));
-		params.add(new BasicNameValuePair(PARAM_PASSWORD, password));
-		HttpEntity entity = null;
-		try {
-			entity = new UrlEncodedFormEntity(params);
-		} catch (final UnsupportedEncodingException e) {
-			// this should never happen.
-			throw new AssertionError(e);
-		}
-		String baseUrl = getBaseUrl(context);
-//		if (Log.isLoggable(TAG, Log.INFO)) {
-			Log.i(TAG, "Authentication to: " + baseUrl + AUTH_URI);
-		//}
-		final HttpPost post = new HttpPost(baseUrl + AUTH_URI);
-		post.addHeader(entity.getContentType());
-		post.setEntity(entity);
-		String authToken = null;
-		
-		HttpClient httpClient = getHttpClient(); 
-
 		LoginResponse response = new LoginResponse();
-
+		HttpURLConnection urlConnection = null;
 		try {
-			resp = httpClient.execute(post);
-			
-			if (resp.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+			String postData = PARAM_USERNAME + "=" + URLEncoder.encode(username)
+					+ "&" + PARAM_PASSWORD + "=" + URLEncoder.encode(password);
 
+			urlConnection = getURLConnection(getBaseUrl(context) + AUTH_URI);
+			urlConnection.setRequestProperty("Accept", "application/json");
+			urlConnection.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
+
+			urlConnection.setDoOutput(true);
+			OutputStream os = urlConnection.getOutputStream();
+			sendPostData(os, postData);
+
+			int sc = urlConnection.getResponseCode();
+			if (sc == 200) {
 				JSONObject loginJson;
 				try {
-					loginJson = new JSONObject(EntityUtils.toString(resp
-							.getEntity()));
+					loginJson = new JSONObject(readStringResponse(urlConnection));
 
 					response.setSuccess(loginJson.getBoolean("success"));
 					if (loginJson.has("reason")) {
@@ -172,7 +169,6 @@ final public class NetworkUtilities {
 					Log.e(TAG, "Unable to parse login response", e);
 				}
 			}
-
 			if (Log.isLoggable(TAG, Log.INFO)) {
 				Log.i(TAG, "Login Response: " + response);
 			}
@@ -185,9 +181,9 @@ final public class NetworkUtilities {
 			if (Log.isLoggable(TAG, Log.VERBOSE)) {
 				Log.v(TAG, "getAuthtoken completing");
 			}
-			
-			// Close the http client connection
-			shutdownConnectionManager(httpClient);
+			if (urlConnection != null) {
+				urlConnection.disconnect();
+			}
 		}
 		return response;
 	}
@@ -206,12 +202,9 @@ final public class NetworkUtilities {
 
 		SubmissionStatus status = null;
 
-		StringEntity stringEntity;
-		HttpClient httpClient = getHttpClient();
-		
+		HttpURLConnection urlConnection = null;
 		try {
-			stringEntity = new StringEntity(JSONUtil.getInstance().toJson(
-					submission));
+			String stringOutput = JSONUtil.getInstance().toJson(submission);
 
 			Map<String, String> parameterMap = new HashMap<String, String>();
 			parameterMap.put("username", account.name);
@@ -219,21 +212,23 @@ final public class NetworkUtilities {
 			String hmac = HashUtils.hash(parameterMap);
 			parameterMap.put("hmac", URLUtils.encode(hmac));
 
-			final HttpPost post = new HttpPost(StringUtils.replaceTokens(
-					getBaseUrl(context) + SUBMIT_JOB_DATA_URI, parameterMap));
 			Log.d(TAG, "username: " + account.name);
 			Log.d(TAG, "hmac: " + hmac);
 
-			post.setEntity(stringEntity);
-			post.setHeader("Accept", "application/json");
-			post.setHeader("Content-type", "application/json");			
-			
-			final HttpResponse httpResponse = httpClient.execute(post);
+			urlConnection = getURLConnection(StringUtils.replaceTokens(
+					getBaseUrl(context) + SUBMIT_JOB_DATA_URI, parameterMap));
+			urlConnection.setRequestProperty("Accept", "application/json");
+			urlConnection.setRequestProperty("Content-type", "application/json");
+
+			urlConnection.setDoOutput(true);
+			OutputStream os = urlConnection.getOutputStream();
+			sendPostData(os, stringOutput);
+
+			int sc = urlConnection.getResponseCode();
 			// if (httpResponse.getStatusLine().getStatusCode() ==
 			// HttpStatus.SC_CREATED) {
-			String response = EntityUtils.toString(httpResponse.getEntity());
+			String response = readStringResponse(urlConnection);
 
-			status = JSONUtil.getInstance().parseSubmissionStatus(response);
 			Log.d(TAG, "Response: " + response);
 			// } else {
 			// Log.w(TAG, "Data submission failed: "
@@ -241,13 +236,12 @@ final public class NetworkUtilities {
 			// }
 		} catch (UnsupportedEncodingException e) {
 			Log.e(TAG, "Unable to convert submission to JSON", e);
-		} catch (ClientProtocolException e) {
-			Log.e(TAG, "Error submitting json", e);
 		} catch (IOException e) {
 			Log.e(TAG, "Error submitting json", e);
 		} finally {
-			// Close the http client connection
-			shutdownConnectionManager(httpClient);
+			if (urlConnection != null) {
+				urlConnection.disconnect();
+			}
 		}
 		return status;
 
@@ -255,8 +249,7 @@ final public class NetworkUtilities {
 
 	public static void fetchJobs(Context context, Account account,
 			String authToken, Date lastUpdated, JobDefinitionHandler callback)
-			throws JSONException, ParseException, IOException,
-			AuthenticationException {
+			throws JSONException, ParseException, IOException {
 
 		SimpleDateFormat dateFormatter = new SimpleDateFormat(
 				"yyyy-MM-dd'T'HH:mm:ss");
@@ -268,27 +261,24 @@ final public class NetworkUtilities {
 		String hmac = HashUtils.hash(parameterMap);
 		parameterMap.put("hmac", URLUtils.encode(hmac));
 
-		final HttpGet get = new HttpGet(StringUtils.replaceTokens(
-				getBaseUrl(context) + FETCH_JOBS_URI, parameterMap));
+		HttpURLConnection urlConnection = null;
+		try {
+			urlConnection = getURLConnection(StringUtils.replaceTokens(
+					getBaseUrl(context) + FETCH_JOBS_URI, parameterMap));
 
-		Log.d(TAG, get.toString());
-
-		HttpClient httpClient = getHttpClient();
-		
-		final HttpResponse httpResponse = httpClient.execute(get);
-		JsonStreamParser streamParser = new JacksonStreamParser();
-
-		streamParser.parseJobDefinitionStream(httpResponse.getEntity()
-				.getContent(), callback);
-		
-		shutdownConnectionManager(httpClient);
-		
+			int sc = urlConnection.getResponseCode();
+			JsonStreamParser streamParser = new JacksonStreamParser();
+			streamParser.parseJobDefinitionStream(urlConnection.getInputStream(), callback);
+		} finally {
+			if (urlConnection != null) {
+				urlConnection.disconnect();
+			}
+		}
 	}
-
 
 	public static void fetchTaskDefinitions(Context context, Account account,
 			String authToken, Date lastUpdated, TaskDefinitionHandler callback) throws JSONException,
-			ParseException, IOException, AuthenticationException {
+			ParseException, IOException {
 			
 		SimpleDateFormat dateFormatter = new SimpleDateFormat(
 				"yyyy-MM-dd'T'HH:mm:ss");
@@ -300,23 +290,18 @@ final public class NetworkUtilities {
 		String hmac = HashUtils.hash(parameterMap);
 		parameterMap.put("hmac", URLUtils.encode(hmac));
 
-		HttpClient httpClient = getHttpClient();
-		
-		final HttpGet get = new HttpGet(StringUtils.replaceTokens(
-				getBaseUrl(context) + FETCH_TASK_DEFINITIONS_URI, parameterMap));
+		HttpURLConnection urlConnection = null;
+		try {
+			urlConnection = getURLConnection(StringUtils.replaceTokens(
+					getBaseUrl(context) + FETCH_TASK_DEFINITIONS_URI, parameterMap));
 
-		final HttpResponse httpResponse = getHttpClient().execute(get);
-		JsonStreamParser streamParser = new JacksonStreamParser();
-
-		streamParser.parseTaskDefinitionStream(httpResponse.getEntity()
-				.getContent(), callback);
-		
-		shutdownConnectionManager(httpClient);
+			int sc = urlConnection.getResponseCode();
+			JsonStreamParser streamParser = new JacksonStreamParser();
+			streamParser.parseTaskDefinitionStream(urlConnection.getInputStream(), callback);
+		} finally {
+			if (urlConnection != null) {
+				urlConnection.disconnect();
+			}
+		}
 	}
-	
-	
-	public static void shutdownConnectionManager(HttpClient httpClient) {
-		httpClient.getConnectionManager().shutdown();
-	}
-
 }
