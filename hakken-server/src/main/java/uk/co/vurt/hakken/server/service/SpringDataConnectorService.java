@@ -10,9 +10,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.stereotype.Component;
 
 import uk.co.vurt.hakken.server.connector.DataConnector;
 
+@Component
 public class SpringDataConnectorService implements DataConnectorService, ApplicationContextAware {
 
 	private static final Logger logger = LoggerFactory.getLogger(SpringDataConnectorService.class);
