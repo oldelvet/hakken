@@ -13,7 +13,7 @@
 	</parent>
 
 	<properties>
-		<!-- <jackson.version>2.0.0</jackson.version> -->
+		<jackson.version>2.8.8</jackson.version>
         <db.persistence.schema>hakken</db.persistence.schema>
 	</properties>
 
@@ -136,20 +136,15 @@
 
 		<!-- Jackson JSON library -->
 		<dependency>
-			<groupId>org.codehaus.jackson</groupId>
-			<artifactId>jackson-mapper-asl</artifactId>
-			<version>${jackson.version}</version>
+    		<groupId>com.fasterxml.jackson.core</groupId>
+	    	<artifactId>jackson-core</artifactId>
+		    <version>${jackson.version}</version>
 		</dependency>
-		<!-- <dependency> -->
-		<!-- <groupId>com.fasterxml.jackson.core</groupId> -->
-		<!-- <artifactId>jackson-core</artifactId> -->
-		<!-- <version>${jackson.version}</version> -->
-		<!-- </dependency> -->
-		<!-- <dependency> -->
-		<!-- <groupId>com.fasterxml.jackson.core</groupId> -->
-		<!-- <artifactId>jackson-databind</artifactId> -->
-		<!-- <version>${jackson.version}</version> -->
-		<!-- </dependency> -->
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-databind</artifactId>
+		    <version>${jackson.version}</version>
+		</dependency>
 
 		<!-- AspectJ -->
 		<dependency>
