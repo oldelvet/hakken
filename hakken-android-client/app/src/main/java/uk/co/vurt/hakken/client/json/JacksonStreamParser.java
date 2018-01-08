@@ -8,17 +8,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.codehaus.jackson.JsonFactory;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.JsonParser;
-import org.codehaus.jackson.JsonToken;
-import org.codehaus.jackson.map.ObjectMapper;
-
 import uk.co.vurt.hakken.domain.job.DataItem;
 import uk.co.vurt.hakken.domain.job.JobDefinition;
 import uk.co.vurt.hakken.domain.task.TaskDefinition;
 import android.util.Log;
+
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JacksonStreamParser implements JsonStreamParser {
 
@@ -239,8 +238,7 @@ public class JacksonStreamParser implements JsonStreamParser {
 	private TaskDefinition readTaskDefinition(JsonParser jp) throws IOException, JsonParseException{
 		//Use object mapper rather than stream parsing for the time being.
 		ObjectMapper mapper = new ObjectMapper();
-		JsonNode taskNode = mapper.readTree(jp);
-		TaskDefinition taskDefinition = mapper.readValue(taskNode, TaskDefinition.class);
+		TaskDefinition taskDefinition = mapper.readValue(jp, TaskDefinition.class);
 		return taskDefinition;
 	}
 

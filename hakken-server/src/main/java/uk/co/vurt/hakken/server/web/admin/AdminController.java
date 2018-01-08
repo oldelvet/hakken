@@ -7,10 +7,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.SerializationConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +16,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 import uk.co.vurt.hakken.domain.task.TaskDefinition;
 import uk.co.vurt.hakken.server.connector.ConfigProperty;
@@ -63,7 +64,7 @@ public class AdminController {
 	@RequestMapping(value = "/task/{name}", method = RequestMethod.GET)
 	public String viewTask(@PathVariable String name, Model model) throws JsonGenerationException, JsonMappingException, IOException{
 		ObjectMapper mapper = new ObjectMapper();
-		mapper.configure(SerializationConfig.Feature.INDENT_OUTPUT, true);
+		mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
 		model.addAttribute("task", taskRegistry.getTask(name));
 		model.addAttribute("taskAsJson", mapper.writeValueAsString(taskRegistry.getTask(name)));
 		model.addAttribute("dcDefinitionMappings", definitionMappingService.getAll());
