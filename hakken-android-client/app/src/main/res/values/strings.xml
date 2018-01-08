@@ -8,19 +8,20 @@
     
     <string name="job_list_title">Your Job List</string>
     
+
 	<!-- Permission label -->
-	<string name="permlab_samplesyncadapterAuthPassword">access to passwords for Sample SyncAdapter accounts
+	<string name="permlab_hakkensyncadapterAuthPassword">access to passwords for TaskHelper accounts
 	</string>
 	<!-- Permission description -->
-	<string name="permdesc_samplesyncadapterAuthPassword">
+	<string name="permdesc_hakkensyncadapterAuthPassword">
 		Allows applications direct access to the passwords
 		for the TaskHelper account(s) you have configured.
 	</string>
 
 	<!-- Permission label -->
-	<string name="permlab_samplesyncadapterAuth">view configured accounts</string>
+	<string name="permlab_hakkensyncadapterAuth">View configured accounts</string>
 	<!-- Permission description -->
-	<string name="permdesc_samplesyncadapterAuth">Allows applications to see the usernames (email
+	<string name="permdesc_hakkensyncadapterAuth">Allows applications to see the usernames (email
 		addresses) of the TaskHelper account(s) you have configured.</string>
 	<string name="notification_login_error">Touch to sign into your TaskHelper account.
 	</string>
