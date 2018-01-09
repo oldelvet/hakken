@@ -39,7 +39,7 @@ import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class RunJob extends Activity implements DatePickerDialogTools {
+public class RunJob extends Activity implements DatePickerDialogTools, DataWidgetTools {
 
 	private static final String TAG = "RunJob";
 	private static final String WIDGET_MAP_KEY = TAG + "-widget_map";
@@ -409,11 +409,11 @@ public class RunJob extends Activity implements DatePickerDialogTools {
 		return valid;
 	}
 
-	private DataItem retrieveDataItem(String pageName, String name, String type) {
+	public DataItem retrieveDataItem(String pageName, String name, String type) {
 		return jobProcessor.retrieveDataItem(pageName, name, type);
 	}
 
-	private String createWidgetKey(String pageName, PageItem item) {
+	public String createWidgetKey(String pageName, PageItem item) {
 		return pageName + "_" + item.getName() + "_" + item.getType();
 	}
 
