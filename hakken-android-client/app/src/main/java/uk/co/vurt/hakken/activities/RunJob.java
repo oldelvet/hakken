@@ -39,7 +39,7 @@ import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class RunJob extends Activity {
+public class RunJob extends Activity implements DatePickerDialogTools {
 
 	private static final String TAG = "RunJob";
 	private static final String WIDGET_MAP_KEY = TAG + "-widget_map";
@@ -527,7 +527,7 @@ public class RunJob extends Activity {
 
 	private LabelledDatePicker currentDatePicker;
 
-	private void showDatePickerDialog(LabelledDatePicker datePicker) {
+	public void showDatePickerDialog(LabelledDatePicker datePicker) {
 		currentDatePicker = datePicker;
 		// TODO: Extract default date value from labelled date picker
 		Calendar cal = Calendar.getInstance();
