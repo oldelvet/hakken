@@ -26,6 +26,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -223,6 +224,7 @@ public class RunJob extends Activity implements DatePickerDialogTools, DataWidge
 		
 		Log.d(TAG, "Saving page: " + page);
 		List<PageItem> items = page.getItems();
+
 		for (PageItem item : items) {
 			String widgetKey = createWidgetKey(jobProcessor.getPageName(), item);
 			WidgetWrapper wrapper = widgetWrapperMap.get(widgetKey);
@@ -430,51 +432,7 @@ public class RunJob extends Activity implements DatePickerDialogTools, DataWidge
 
 				List<PageItem> items = jobProcessor.getPageItems();
 
-				if (items != null) {
-					Log.d(TAG, "Items: " + items.size());
-					for (PageItem item : items) {
-						Log.d(TAG, "Current item: " + item);
-						String widgetKey = createWidgetKey(
-								jobProcessor.getPageName(), item);
-
-						WidgetWrapper wrapper = null;
-						if (widgetWrapperMap.containsKey(widgetKey)) {
-							// retrieve widget from map
-							wrapper = widgetWrapperMap.get(widgetKey);
-						} else {
-							// new widget, so create it
-							wrapper = WidgetFactory.createWidget(
-									this,
-									item,
-									retrieveDataItem(
-											jobProcessor.getPageName(),
-											item.getName(), item.getType()));
-
-							// TODO: Figure out better way of handling this,
-							// hopefully within the widget factory itself.
-							if ("DATETIME".equals(item.getType())) {
-								final LabelledDatePicker datePicker = ((LabelledDatePicker) wrapper
-										.getWidget());
-								datePicker
-										.setOnClickListener(new View.OnClickListener() {
-											@Override
-											public void onClick(View v) {
-												showDatePickerDialog(datePicker);
-											}
-										});
-							}
-							widgetWrapperMap.put(widgetKey, wrapper);
-						}
-						if (!wrapper.isHidden()) {
-							pageContent.addView(wrapper.getWidget());
-						}
-					}
-				} else {
-					TextView errorLabel = new TextView(this);
-					errorLabel.setText("No items were defined for this page.");
-					pageContent.addView(errorLabel);
-					Log.d(TAG, "No items defined for this page.");
-				}
+				buildWidgets(this, items, jobProcessor.getPageName(), widgetWrapperMap, pageContent, this, this);
 
 				if (jobProcessor.previousPages()) {
 					previousButton.setVisibility(View.VISIBLE);
@@ -517,6 +475,58 @@ public class RunJob extends Activity implements DatePickerDialogTools, DataWidge
 				drawPage(true);
 			}
 		}
+	}
+
+	private static void buildWidgets(Context context,
+									 List<PageItem> items,
+									 String pageName,
+									 HashMap<String, WidgetWrapper> widgetWrapperMap,
+									 LinearLayout pageContent,
+									 final DatePickerDialogTools dpd,
+									 DataWidgetTools dwt) {
+		if (items != null) {
+            Log.d(TAG, "Items: " + items.size());
+            for (PageItem item : items) {
+                Log.d(TAG, "Current item: " + item);
+                String widgetKey = dwt.createWidgetKey(
+                        pageName, item);
+                WidgetWrapper wrapper = null;
+                if (widgetWrapperMap.containsKey(widgetKey)) {
+                    // retrieve widget from map
+                    wrapper = widgetWrapperMap.get(widgetKey);
+                } else {
+                    wrapper = WidgetFactory.createWidget(
+                            context,
+                            item,
+                            dwt.retrieveDataItem(
+                                    pageName,
+                                    item.getName(), item.getType()));
+
+                    // TODO: Figure out better way of handling this,
+                    // hopefully within the widget factory itself.
+                    if ("DATETIME".equals(item.getType())) {
+                        final LabelledDatePicker datePicker = ((LabelledDatePicker) wrapper
+                                .getWidget());
+                        datePicker
+                                .setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dpd.showDatePickerDialog(datePicker);
+                                    }
+                                });
+                    }
+                    widgetWrapperMap.put(widgetKey, wrapper);
+                }
+                if (!wrapper.isHidden()) {
+                    pageContent.addView(wrapper.getWidget());
+                }
+            }
+        } else {
+            TextView errorLabel = new TextView(context);
+            errorLabel.setText("No items were defined for this page.");
+            pageContent.addView(errorLabel);
+            Log.d(TAG, "No items defined for this page.");
+        }
 	}
 
 	static final int DATE_DIALOG_ID = 0;
