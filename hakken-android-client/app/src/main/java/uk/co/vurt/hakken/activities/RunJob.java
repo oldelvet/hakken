@@ -411,12 +411,44 @@ public class RunJob extends Activity implements DatePickerDialogTools, DataWidge
 		return valid;
 	}
 
+	@Override
 	public DataItem retrieveDataItem(String pageName, String name, String type) {
 		return jobProcessor.retrieveDataItem(pageName, name, type);
 	}
 
+	@Override
+	public DataItem createDataItem(String pageName, String name, String type, String value) {
+		return new DataItem(pageName, name, type, value);
+	}
+
+	@Override
+	public Uri storeDataItem(DataItem dataItem) {
+		return jobProcessor.storeDataItem(dataItem);
+	}
+
+	@Override
+	public Uri storeDataItem(DataItem dataItem, String keyword, String description) {
+		return jobProcessor.storeDataItem(dataItem, keyword, description);
+	}
+
+	@Override
 	public String createWidgetKey(String pageName, PageItem item) {
 		return pageName + "_" + item.getName() + "_" + item.getType();
+	}
+
+	@Override
+	public boolean evaluateCondition(String condition) throws ExpressionException {
+		return jobProcessor.evaluateCondition(condition);
+	}
+
+	@Override
+	public String evaluateExpression(String expression) {
+		return jobProcessor.evaluateExpression(expression);
+	}
+
+	@Override
+	public void recordValidationMessage(String msg) {
+		validationMessage = msg;
 	}
 
 	protected void drawPage(boolean ignoreErrors) {
