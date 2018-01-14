@@ -2,9 +2,12 @@ package uk.co.vurt.hakken.ui;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import uk.co.vurt.hakken.R;
+import uk.co.vurt.hakken.activities.DataWidgetTools;
+import uk.co.vurt.hakken.activities.DatePickerDialogTools;
 import uk.co.vurt.hakken.domain.NameValue;
 import uk.co.vurt.hakken.domain.job.DataItem;
 import uk.co.vurt.hakken.domain.task.pageitem.LabelledValue;
@@ -33,9 +36,13 @@ public class WidgetFactory {
 	private static final String TAG = "WidgetFactory";
 	
 	
-	
-	public static WidgetWrapper createWidget(Context context, PageItem item,
-			DataItem dataItem) {
+	public static WidgetWrapper createWidget(Context context,
+                                             PageItem item,
+                                             DataItem dataItem,
+                                             String pageName,
+                                             HashMap<String, WidgetWrapper> widgetWrapperMap,
+                                             DataWidgetTools dwt,
+                                             DatePickerDialogTools dpd) {
 
 		View widget = null;
 

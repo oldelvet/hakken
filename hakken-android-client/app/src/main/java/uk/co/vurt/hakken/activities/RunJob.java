@@ -535,7 +535,11 @@ public class RunJob extends Activity implements DatePickerDialogTools, DataWidge
                             item,
                             dwt.retrieveDataItem(
                                     pageName,
-                                    item.getName(), item.getType()));
+                                    item.getName(), item.getType()),
+                            pageName,
+                            widgetWrapperMap,
+                            dwt,
+                            dpd);
 
                     // TODO: Figure out better way of handling this,
                     // hopefully within the widget factory itself.
