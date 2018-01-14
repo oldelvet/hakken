@@ -225,8 +225,46 @@ public class RunJob extends Activity implements DatePickerDialogTools, DataWidge
 		Log.d(TAG, "Saving page: " + page);
 		List<PageItem> items = page.getItems();
 
+		valid &= savePageItems(items, jobProcessor.getPageName(), widgetWrapperMap,
+				jobProcessor.isAdHocJob(), this, missingValues);
+
+		// CK: START CODE
+		// Check Page validation
+		// Validation is triggered if the condition provided by the task page is validated as true.
+		// Only one validation statement is permitted per page.
+		if(page.getAttributes() != null &&
+				page.getAttributes().containsKey("validation")){
+
+			String validation = page.getAttributes().get("validation");
+
+			try {
+				boolean validationResult = jobProcessor.evaluateCondition(validation);
+
+				if (validationResult) {
+					// Set alert message
+					validationMessage = page.getAttributes().get("validation-message");
+					valid = false;
+				}
+			} catch (ExpressionException e) {
+				Log.w(TAG, "Unable to evaluate condition for " + page.getName());
+			}
+
+		}
+		// END CK CODE
+
+		Log.d(TAG, "page valid: " + valid);
+		return valid;
+	}
+
+	public static boolean savePageItems(List<PageItem> items,
+										String pageName,
+									 	HashMap<String, WidgetWrapper> widgetWrapperMap,
+									 	boolean isAdHoc,
+									 	DataWidgetTools dwt,
+									 	List<String> missingValues) {
+		boolean valid = true;
 		for (PageItem item : items) {
-			String widgetKey = createWidgetKey(jobProcessor.getPageName(), item);
+			String widgetKey = dwt.createWidgetKey(pageName, item);
 			WidgetWrapper wrapper = widgetWrapperMap.get(widgetKey);
 			View widget = wrapper.getWidget();
 
@@ -237,7 +275,7 @@ public class RunJob extends Activity implements DatePickerDialogTools, DataWidge
 							|| "DIGITS".equals(item.getType())
 							|| "NUMERIC".equals(item.getType())) {
 						LabelledEditBox editBox = (LabelledEditBox) widget;
-						value = editBox.getValue();	
+						value = editBox.getValue();
 						// Check  if value is empty but has a default value
 						Log.d(TAG, "Current value for " + item.getName() + "[" + value + "]");
 						if (value == null || value.equals("")) {
@@ -274,7 +312,7 @@ public class RunJob extends Activity implements DatePickerDialogTools, DataWidge
 
 							// Check to see if selected items are allowed
 							if (spinner.validateSelectedValues() == false) {
-								validationMessage = "The selected items contradict each other. Items marked with an asterisk can only be selected on their own. Please adjust your selection, ensuring that this is the case.";
+								dwt.recordValidationMessage("The selected items contradict each other. Items marked with an asterisk can only be selected on their own. Please adjust your selection, ensuring that this is the case.");
 								valid = false;
 							}
 
@@ -291,42 +329,41 @@ public class RunJob extends Activity implements DatePickerDialogTools, DataWidge
 					boolean useExpression = true;
 					if(condition != null){
 						try {
-							useExpression = jobProcessor.evaluateCondition(condition);
+							useExpression = dwt.evaluateCondition(condition);
 						} catch (ExpressionException e) {
 							Log.w(TAG, "Unable to evaluate condition for " + item.getName());
 						}
 					}
 					String expression = PageItemProcessor.getStringAttribute(
 							item, "expression");
-					if (expression != null && useExpression) {						
-						value = jobProcessor.evaluateExpression(expression);
+					if (expression != null && useExpression) {
+						value = dwt.evaluateExpression(expression);
 						Log.d(TAG,"Setting Value: " + value);
 					}
-						
+
 
 					if (value != null) {
 
 						// compare to previous value
-						DataItem previousValue = retrieveDataItem(
-								jobProcessor.getPageName(), item.getName(),
+						DataItem previousValue = dwt.retrieveDataItem(
+								pageName, item.getName(),
 								item.getType());
 
 						// only store a dataitem if the value has changed.
 						if ((previousValue == null)
 								|| (previousValue != null && (!previousValue
-										.getValue().equals(value)))) {
+								.getValue().equals(value)))) {
 							Log.d(TAG,
 									"Previous value: "
 											+ (previousValue != null ? previousValue
-													.getValue() : "null")
+											.getValue() : "null")
 											+ " New value: " + value);
 
-							DataItem dataItem = new DataItem(page.getName(),
+							DataItem dataItem = dwt.createDataItem(pageName,
 									item.getName(), item.getType(), value);
-						
-										
-							if (jobProcessor.isAdHocJob()) {
-							
+
+							if (isAdHoc) {
+
 								// Check if ad-hoc job and need to set the JobList details
 								String keyword = PageItemProcessor.getStringAttribute(
 										item, "keyword");
@@ -338,29 +375,25 @@ public class RunJob extends Activity implements DatePickerDialogTools, DataWidge
 								if (description != null && description.equals("true")) {
 									description = value;
 								}
-								
-								Uri dataItemUri = jobProcessor
+
+								Uri dataItemUri = dwt
 										.storeDataItem(dataItem, keyword, description);
-								
+
 								Log.d(TAG, "Stored dataitem: " + dataItemUri);
-								
+
 							} else {
-								Uri dataItemUri = jobProcessor
-										.storeDataItem(dataItem);
-								
+								Uri dataItemUri = dwt.storeDataItem(dataItem);
 								Log.d(TAG, "Stored dataitem: " + dataItemUri);
 							}
 						}
-					}															
-						
-				
+					}
 
 					if (wrapper.isRequired()) {
 						boolean checkValue = true;
 
 						if (wrapper.hasCondition()) {
 							try {
-								checkValue = jobProcessor
+								checkValue = dwt
 										.evaluateCondition(wrapper
 												.getCondition());
 							} catch (ExpressionException e) {
@@ -381,33 +414,6 @@ public class RunJob extends Activity implements DatePickerDialogTools, DataWidge
 				}
 			}
 		}
-		
-		// CK: START CODE
-		// Check Page validation
-		// Validation is triggered if the condition provided by the task page is validated as true.
-		// Only one validation statement is permitted per page.
-		if(page.getAttributes() != null && 
-				page.getAttributes().containsKey("validation")){
-			
-			String validation = page.getAttributes().get("validation");			
-			
-			try {
-				boolean validationResult = jobProcessor.evaluateCondition(validation); 
-				
-				if (validationResult) {
-					// Set alert message
-					validationMessage = page.getAttributes().get("validation-message");
-					valid = false;
-				}
-				 
-			} catch (ExpressionException e) {
-				Log.w(TAG, "Unable to evaluate condition for " + page.getName());
-			}
-			
-		}		
-		// END CK CODE		
-										
-		Log.d(TAG, "page valid: " + valid);
 		return valid;
 	}
 
