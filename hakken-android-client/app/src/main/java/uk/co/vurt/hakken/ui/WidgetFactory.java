@@ -12,11 +12,13 @@ import uk.co.vurt.hakken.domain.NameValue;
 import uk.co.vurt.hakken.domain.job.DataItem;
 import uk.co.vurt.hakken.domain.task.pageitem.LabelledValue;
 import uk.co.vurt.hakken.domain.task.pageitem.PageItem;
+import uk.co.vurt.hakken.domain.task.pageitem.PageMultiItem;
 import uk.co.vurt.hakken.processor.PageItemProcessor;
 import uk.co.vurt.hakken.ui.widget.LabelledCheckBox;
 import uk.co.vurt.hakken.ui.widget.LabelledDatePicker;
 import uk.co.vurt.hakken.ui.widget.LabelledEditBox;
 import uk.co.vurt.hakken.ui.widget.LabelledSpinner;
+import uk.co.vurt.hakken.ui.widget.MultiGroupParent;
 import uk.co.vurt.hakken.ui.widget.WidgetWrapper;
 import android.content.Context;
 import android.text.method.DigitsKeyListener;
@@ -62,9 +64,14 @@ public class WidgetFactory {
 		// create new widget and add it to the map
 		if ("LABEL".equals(item.getType())) {
 			TextView label = new TextView(context);
-			
+
 			label.setText(item.getLabel());
 			widget = label;
+		} else if ("MULTI".equals(item.getType())) {
+			PageMultiItem pmi = (PageMultiItem) item;
+			MultiGroupParent gp = new MultiGroupParent(context);
+			gp.setItems(pageName, pmi.getName(), pmi.getItems(), widgetWrapperMap, dwt, dpd);
+			widget = gp;
 		} else if ("TEXT".equals(item.getType())) {
 			if(initialValue == null){
 				initialValue = "";
