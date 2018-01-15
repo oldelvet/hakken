@@ -515,7 +515,7 @@ public class RunJob extends Activity implements DatePickerDialogTools, DataWidge
 		}
 	}
 
-	private static void buildWidgets(Context context,
+	public static void buildWidgets(Context context,
 									 List<PageItem> items,
 									 String pageName,
 									 HashMap<String, WidgetWrapper> widgetWrapperMap,
