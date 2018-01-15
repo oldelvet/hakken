@@ -18,6 +18,7 @@ import uk.co.vurt.hakken.ui.widget.LabelledCheckBox;
 import uk.co.vurt.hakken.ui.widget.LabelledDatePicker;
 import uk.co.vurt.hakken.ui.widget.LabelledEditBox;
 import uk.co.vurt.hakken.ui.widget.LabelledSpinner;
+import uk.co.vurt.hakken.ui.widget.MultiGroupParent;
 import uk.co.vurt.hakken.ui.widget.WidgetWrapper;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -268,7 +269,10 @@ public class RunJob extends Activity implements DatePickerDialogTools, DataWidge
 			if (!wrapper.isReadOnly()) {
 				if (widget != null) {
 					String value = null;
-					if ("TEXT".equals(item.getType()) 
+					if ("MULTI".equals(item.getType())) {
+						MultiGroupParent groupParent = (MultiGroupParent) widget;
+						valid &= groupParent.saveItems(pageName, widgetWrapperMap, isAdHoc, missingValues);
+					} else if ("TEXT".equals(item.getType())
 							|| "DIGITS".equals(item.getType())
 							|| "NUMERIC".equals(item.getType())) {
 						LabelledEditBox editBox = (LabelledEditBox) widget;
@@ -317,7 +321,6 @@ public class RunJob extends Activity implements DatePickerDialogTools, DataWidge
 						} else {
 							value = spinner.getSelectedValue();
 						}
-
 					}
 
 					// Not sure if this it the best place to do this but...
