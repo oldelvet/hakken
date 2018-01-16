@@ -33,6 +33,8 @@ implements Serializable, View.OnClickListener, MultiChildListener {
 
     /** Page name. */
     private String mPageName;
+    /** Child group count item. */
+    private PageItem mCountItem;
     /** Child group items specification. */
     private List<PageItem> mItems;
     /** Variable base name. */
@@ -113,6 +115,8 @@ implements Serializable, View.OnClickListener, MultiChildListener {
                          DataWidgetTools dwt, DatePickerDialogTools dpd) {
         this.mPageName = pageName;
         this.mBaseName = basename;
+        // Setup count item. Default to 1 to leave us with a single item initially.
+        this.mCountItem = new PageItem(mBaseName + ".count", "Child Count", "NUMERIC", "1");
         this.mItems = items;
         this.mWidgetWrapperMap = widgetWrapperMap;
         this.mDwt = dwt;
