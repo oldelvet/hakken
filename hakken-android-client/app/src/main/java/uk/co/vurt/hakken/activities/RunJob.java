@@ -375,7 +375,7 @@ public class RunJob extends Activity implements DatePickerDialogTools, DataWidge
 		return valid;
 	}
 
-    private static void saveOneValue(String pageName, boolean isAdHoc, DataWidgetTools dwt, PageItem item, String value) {
+    public static void saveOneValue(String pageName, boolean isAdHoc, DataWidgetTools dwt, PageItem item, String value) {
         // compare to previous value
         DataItem previousValue = dwt.retrieveDataItem(
                 pageName, item.getName(),
