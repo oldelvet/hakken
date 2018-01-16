@@ -60,7 +60,7 @@ implements Serializable, View.OnClickListener, MultiChildListener {
      */
     private final List<Integer> mChildOrder = new ArrayList<>();
     /** Any retired data items that should be removed/flushed on the next save. */
-    private final Set<Integer> retiredDataIndices = new HashSet<Integer>();
+    private final Set<Integer> mRetiredDataIndices = new HashSet<Integer>();
 
     /**
      * Constructor.
@@ -152,7 +152,7 @@ implements Serializable, View.OnClickListener, MultiChildListener {
         child.setDataIndex(dataIndex);
         childDwt.setDataIndex(dataIndex);
         // Retired data index item no longer needs removing
-        retiredDataIndices.remove((Integer)dataIndex);
+        mRetiredDataIndices.remove((Integer)dataIndex);
         mChildOrder.add(childId);
 
     }
@@ -186,7 +186,7 @@ implements Serializable, View.OnClickListener, MultiChildListener {
                 dataIndex++;
             }
             // Record that the last item is now a retired data index value
-            this.retiredDataIndices.add(mChildOrder.size());
+            this.mRetiredDataIndices.add(mChildOrder.size());
         } else {
             throw new RuntimeException("Child mismatch - child did not exist");
         }
