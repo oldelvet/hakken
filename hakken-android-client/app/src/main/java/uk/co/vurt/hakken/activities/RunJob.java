@@ -420,6 +420,30 @@ public class RunJob extends Activity implements DatePickerDialogTools, DataWidge
         }
     }
 
+    /**
+     * Remove page items. The readonly flag is read direct from the page item because the
+     * widgetWrapperMap is likely not available especially when removing items part of a multigroup.
+     * @param items page items
+     * @param pageName page name
+     * @param dwt data widget tools
+     */
+    public static void removePageItems(List<PageItem> items,
+                                       String pageName,
+                                       DataWidgetTools dwt) {
+        boolean valid = true;
+        for (PageItem item : items) {
+            boolean readonly = PageItemProcessor.getBooleanAttribute(item, "readonly");
+            if (!readonly) {
+                DataItem previousValue = dwt.retrieveDataItem(
+                        pageName, item.getName(),
+                        item.getType());
+                if (previousValue != null) {
+                    dwt.removeDataItem(previousValue);
+                }
+            }
+        }
+    }
+
     @Override
 	public DataItem retrieveDataItem(String pageName, String name, String type) {
 		return jobProcessor.retrieveDataItem(pageName, name, type);
