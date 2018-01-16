@@ -126,12 +126,14 @@ implements Serializable, View.OnClickListener, MultiChildListener {
      *
      * In the fullness of time this may reject adding due to rules requested by the page
      * description.
+     * @return true if the child was added, false otherwise
      */
-    private void maybeAddChild() {
+    private boolean maybeAddChild() {
         MultiGroupChild child = new MultiGroupChild(getContext());
         recordNewChild(nextChildId++, child);
         // Add child at the end of the groups. Just before the add button.
         this.addView(child, this.getChildCount() - 1);
+        return true;
     }
 
     /**
