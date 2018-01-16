@@ -99,6 +99,15 @@ implements Serializable, View.OnClickListener, MultiChildListener {
                     childDwt,
                     missingValues);
         }
+        // Remove any obsolete values
+        for (Integer dataIndex : mRetiredDataIndices) {
+            ChildDwt childDwt = new ChildDwt(-1, mDwt, mBaseName);
+            childDwt.setDataIndex(dataIndex);
+            RunJob.removePageItems(mItems,  mPageName, childDwt);
+        }
+        // Remember the number of items present
+        RunJob.saveOneValue(mPageName, isAdHoc, mDwt, mCountItem, "" + mChildOrder.size());
+        mRetiredDataIndices.clear();
         return valid;
     }
 
@@ -123,6 +132,31 @@ implements Serializable, View.OnClickListener, MultiChildListener {
         this.mDpd = dpd;
         MultiGroupChild child = (MultiGroupChild) findViewById(R.id.multi_child);
         recordNewChild(nextChildId++, child);
+        DataItem dataCount = dwt.retrieveDataItem(pageName, mCountItem.getName(), mCountItem.getType());
+        String initialValue = "1";
+        if(dataCount != null){
+            initialValue = dataCount.getValue();
+        }
+        int childCount;
+        try {
+            childCount = Integer.parseInt(initialValue);
+        } catch (Exception e) {
+            childCount = 1;
+        }
+        if (childCount < 0) {
+            childCount = 0;
+        }
+        if (childCount == 0) {
+            removeChildRequest(mChildren.get(mChildOrder.get(0)));
+        } else {
+            for (int idx = 1; idx < childCount; idx++) {
+                // Adding child may fail if we are above limit. But this should not happen in practice
+                if (!maybeAddChild()) {
+                    // Make sure that any no-longer allowed items are scheduled for removal
+                    mRetiredDataIndices.add(idx);
+                }
+            }
+        }
     }
 
     /**
