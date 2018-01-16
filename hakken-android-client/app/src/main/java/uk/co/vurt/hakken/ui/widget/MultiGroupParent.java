@@ -6,6 +6,7 @@ import android.util.SparseArray;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import net.wmfs.coalesce.csql.ExpressionException;
 
@@ -29,10 +30,20 @@ import uk.co.vurt.hakken.domain.task.pageitem.PageItem;
  */
 public class MultiGroupParent extends AbstractLabelledWidget
 implements Serializable, View.OnClickListener, MultiChildListener {
+    /** Minimum children default value. */
+    public static final int MIN_CHILDREN_DEFAULT = 1;
+    /** Maximum children biggest value allowed. */
+    public static final int MAX_CHILDREN_LIMIT = 255;
+
+    /** Add group button. */
     protected Button mButtonExtend;
 
     /** Page name. */
     private String mPageName;
+    /** Minimum items allowed. */
+    private int mMinItems = 1;
+    /** Maximum items allowed. */
+    private int mMaxItems = 255;
     /** Child group count item. */
     private PageItem mCountItem;
     /** Child group items specification. */
@@ -77,12 +88,13 @@ implements Serializable, View.OnClickListener, MultiChildListener {
     }
 
     /**
-     *
+     * Save the items within all children along with the count of children. Any obsolete children
+     * are deleted from the repository.
      * @param pageName
      * @param widgetWrapperMap
      * @param isAdHoc
      * @param missingValues
-     * @return
+     * @return true if the saved items are valid
      */
     public boolean saveItems(String pageName,
                              HashMap<String, WidgetWrapper> widgetWrapperMap,
@@ -98,6 +110,14 @@ implements Serializable, View.OnClickListener, MultiChildListener {
                     isAdHoc,
                     childDwt,
                     missingValues);
+        }
+        if (mChildOrder.size() < mMinItems) {
+            missingValues.add("Not enough entries for " + label.getText());
+            valid = false;
+        }
+        if (mChildOrder.size() > mMaxItems) {
+            missingValues.add("Too many entries for " + label.getText());
+            valid = false;
         }
         // Remove any obsolete values
         for (Integer dataIndex : mRetiredDataIndices) {
@@ -167,6 +187,9 @@ implements Serializable, View.OnClickListener, MultiChildListener {
      * @return true if the child was added, false otherwise
      */
     private boolean maybeAddChild() {
+        if (mChildOrder.size() >= mMaxItems) {
+            return false;
+        }
         MultiGroupChild child = new MultiGroupChild(getContext());
         recordNewChild(nextChildId++, child);
         // Add child at the end of the groups. Just before the add button.
@@ -180,7 +203,6 @@ implements Serializable, View.OnClickListener, MultiChildListener {
      * @param child the child
      */
     private void recordNewChild(Integer childId, MultiGroupChild child) {
-
         int dataIndex = mChildOrder.size();
         child.setChildListener(this);
         child.setChildId(childId);
@@ -195,14 +217,15 @@ implements Serializable, View.OnClickListener, MultiChildListener {
         // Retired data index item no longer needs removing
         mRetiredDataIndices.remove((Integer)dataIndex);
         mChildOrder.add(childId);
-
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.buttonExtend:
-                maybeAddChild();
+                if (!maybeAddChild()) {
+                    Toast.makeText(getContext(), R.string.item_limit_reached, Toast.LENGTH_SHORT).show();
+                }
                 break;
             default:
                 // Not interesting
@@ -232,6 +255,16 @@ implements Serializable, View.OnClickListener, MultiChildListener {
             throw new RuntimeException("Child mismatch - child did not exist");
         }
         this.removeView(child);
+    }
+
+    /**
+     * Set the number of children allowed limits.
+     * @param minItems minimum item count
+     * @param maxItems maximum item count
+     */
+    public void setLimits(int minItems, int maxItems) {
+        this.mMinItems = minItems;
+        this.mMaxItems = maxItems;
     }
 
     /**

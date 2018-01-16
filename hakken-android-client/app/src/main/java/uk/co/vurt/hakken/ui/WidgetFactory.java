@@ -68,8 +68,39 @@ public class WidgetFactory {
 			label.setText(item.getLabel());
 			widget = label;
 		} else if ("MULTI".equals(item.getType())) {
+            String minStr = PageItemProcessor.getStringAttribute(item, "minitems");
+            String maxStr = PageItemProcessor.getStringAttribute(item, "maxitems");
+            int minItems = MultiGroupParent.MIN_CHILDREN_DEFAULT;
+            if ((minStr != null) && (minStr.trim().length() > 0)) {
+                try {
+                    minItems = Integer.parseInt(minStr);
+                } catch (Exception e) {
+                    Log.w(TAG, "Bad minitems value " + minStr);
+                }
+            }
+            if (minItems < 0) {
+                minItems = 0;
+            }
+            if (minItems > MultiGroupParent.MAX_CHILDREN_LIMIT) {
+                minItems = MultiGroupParent.MAX_CHILDREN_LIMIT;
+            }
+            int maxItems = MultiGroupParent.MIN_CHILDREN_DEFAULT;
+            if ((maxStr != null) && (maxStr.trim().length() > 0)) {
+                try {
+                    maxItems = Integer.parseInt(maxStr);
+                } catch (Exception e) {
+                    Log.w(TAG, "Bad maxitems value " + maxStr);
+                }
+            }
+            if (maxItems < minItems) {
+                maxItems = minItems;
+            }
+            if (maxItems > MultiGroupParent.MAX_CHILDREN_LIMIT) {
+                maxItems = MultiGroupParent.MAX_CHILDREN_LIMIT;
+            }
 			PageMultiItem pmi = (PageMultiItem) item;
 			MultiGroupParent gp = new MultiGroupParent(context);
+			gp.setLimits(minItems, maxItems);
 			gp.setItems(pageName, pmi.getName(), pmi.getItems(), widgetWrapperMap, dwt, dpd);
 			widget = gp;
 		} else if ("TEXT".equals(item.getType())) {

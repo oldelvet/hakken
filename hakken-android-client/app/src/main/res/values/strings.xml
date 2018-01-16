@@ -92,5 +92,6 @@
 
     <string name="add">Add</string>
     <string name="remove">Remove</string>
+    <string name="item_limit_reached">Maximum number of items reached.</string>
     <string name="logout_message">Use \"Logout\" to synchronise any outstanding tasks and to remove user specific Task Helper data from the device.</string>
 </resources>
