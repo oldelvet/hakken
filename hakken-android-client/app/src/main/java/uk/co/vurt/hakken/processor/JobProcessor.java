@@ -391,21 +391,53 @@ public class JobProcessor {
 	private Uri persistDataItem(DataItem dataItem){				
 		return persistDataItem(dataItem, "false");
 	}
-	
-	
-	
+
+
+    /*
+     * Remove the specified data item from the contentResolver.
+     * @param dataItem the item to delete
+     * @return true if an item was deleted, false if the item did not exist
+     */
+    private boolean deleteDataItem(DataItem dataItem) {
+        Uri dataItemUri = null;
+
+        int count = contentResolver.delete(Dataitem.Definitions.CONTENT_URI,
+                Dataitem.Definitions.JOB_ID + "=? "
+                        + "AND " + Dataitem.Definitions.PAGENAME + "=? "
+                        + "AND " + Dataitem.Definitions.NAME + "=? "
+                        + "AND " + Dataitem.Definitions.TYPE + "=?",
+                new String[] {
+                        "" + getJobId(),
+                        dataItem.getPageName(),
+                        dataItem.getName(),
+                        dataItem.getType() });
+        return (count > 0);
+    }
+
 	public Uri storeDataItem(DataItem dataItem){
 		Uri dataItemUri = this.persistDataItem(dataItem);
 		updateJobDefinition(null, null);
 		return dataItemUri; 
 	}		
-	
+
 	public Uri storeDataItem(DataItem dataItem, String keyword, String description){
 		Uri dataItemUri = this.persistDataItem(dataItem);
 		updateJobDefinition(keyword, description);
 		return dataItemUri; 		
 	}
-	
+
+    /**
+     * Remove the specified data item from the content resolver.
+     * @param dataItem the data item to remove
+     */
+	public void removeDataItem(DataItem dataItem) {
+	    if (deleteDataItem(dataItem)) {
+	        // No need to set keyword and/or description if removing items.
+            // It would already have been set on create
+	        updateJobDefinition(null, null);
+        }
+    }
+
 	private void updateJobDefinition(String keyword, String description) {
 		// Set the modified flag on the job.
 		ContentValues values = new ContentValues();
