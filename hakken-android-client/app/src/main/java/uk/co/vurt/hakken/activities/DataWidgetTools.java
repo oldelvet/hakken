@@ -46,6 +46,12 @@ public interface DataWidgetTools {
     Uri storeDataItem(DataItem dataItem, String keyword, String description);
 
     /**
+     * Remove the supplied data item.
+     * @param dataItem the data item to delete
+     */
+    void removeDataItem(DataItem dataItem);
+
+    /**
      * Create widget page key for identifying widget on page.
      * @param pageName page name
      * @param item page item

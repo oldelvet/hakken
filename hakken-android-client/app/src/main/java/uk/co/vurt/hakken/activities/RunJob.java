@@ -440,7 +440,12 @@ public class RunJob extends Activity implements DatePickerDialogTools, DataWidge
 		return jobProcessor.storeDataItem(dataItem, keyword, description);
 	}
 
-	@Override
+    @Override
+    public void removeDataItem(DataItem dataItem) {
+        jobProcessor.removeDataItem(dataItem);
+    }
+
+    @Override
 	public String createWidgetKey(String pageName, PageItem item) {
 		return pageName + "_" + item.getName() + "_" + item.getType();
 	}

@@ -264,6 +264,11 @@ implements Serializable, View.OnClickListener, MultiChildListener {
         }
 
         @Override
+        public void removeDataItem(DataItem dataItem) {
+            baseDwt.removeDataItem(dataItem);
+        }
+
+        @Override
         public boolean evaluateCondition(String condition) throws ExpressionException {
             return baseDwt.evaluateCondition(condition);
         }
