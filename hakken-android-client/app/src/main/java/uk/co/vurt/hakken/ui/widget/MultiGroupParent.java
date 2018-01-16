@@ -147,15 +147,16 @@ implements Serializable, View.OnClickListener, MultiChildListener {
      */
     private void recordNewChild(Integer childId, MultiGroupChild child) {
 
+        int dataIndex = mChildOrder.size();
         child.setChildListener(this);
         child.setChildId(childId);
         ChildDwt childDwt = new ChildDwt(childId, mDwt, mBaseName);
+        child.setDataIndex(dataIndex);
+        childDwt.setDataIndex(dataIndex);
         child.setItems(mPageName, mItems, mWidgetWrapperMap, childDwt, mDpd);
         mChildren.put(childId, child);
         MultiGroupChild otherChild = mChildren.get(childId);
         // Added location is the next child index
-        int dataIndex = mChildOrder.size();
-        child.setDataIndex(dataIndex);
         childDwt.setDataIndex(dataIndex);
         // Retired data index item no longer needs removing
         mRetiredDataIndices.remove((Integer)dataIndex);
