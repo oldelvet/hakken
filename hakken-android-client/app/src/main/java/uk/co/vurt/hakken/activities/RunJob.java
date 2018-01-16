@@ -343,50 +343,8 @@ public class RunJob extends Activity implements DatePickerDialogTools, DataWidge
 
 
 					if (value != null) {
-
-						// compare to previous value
-						DataItem previousValue = dwt.retrieveDataItem(
-								pageName, item.getName(),
-								item.getType());
-
-						// only store a dataitem if the value has changed.
-						if ((previousValue == null)
-								|| (previousValue != null && (!previousValue
-								.getValue().equals(value)))) {
-							Log.d(TAG,
-									"Previous value: "
-											+ (previousValue != null ? previousValue
-											.getValue() : "null")
-											+ " New value: " + value);
-
-							DataItem dataItem = dwt.createDataItem(pageName,
-									item.getName(), item.getType(), value);
-
-							if (isAdHoc) {
-
-								// Check if ad-hoc job and need to set the JobList details
-								String keyword = PageItemProcessor.getStringAttribute(
-										item, "keyword");
-								if (keyword != null && keyword.equals("true")) {
-									keyword = value;
-								}
-								String description = PageItemProcessor.getStringAttribute(
-										item, "adhoc-description");
-								if (description != null && description.equals("true")) {
-									description = value;
-								}
-
-								Uri dataItemUri = dwt
-										.storeDataItem(dataItem, keyword, description);
-
-								Log.d(TAG, "Stored dataitem: " + dataItemUri);
-
-							} else {
-								Uri dataItemUri = dwt.storeDataItem(dataItem);
-								Log.d(TAG, "Stored dataitem: " + dataItemUri);
-							}
-						}
-					}
+                        saveOneValue(pageName, isAdHoc, dwt, item, value);
+                    }
 
 					if (wrapper.isRequired()) {
 						boolean checkValue = true;
@@ -417,7 +375,52 @@ public class RunJob extends Activity implements DatePickerDialogTools, DataWidge
 		return valid;
 	}
 
-	@Override
+    private static void saveOneValue(String pageName, boolean isAdHoc, DataWidgetTools dwt, PageItem item, String value) {
+        // compare to previous value
+        DataItem previousValue = dwt.retrieveDataItem(
+                pageName, item.getName(),
+                item.getType());
+
+        // only store a dataitem if the value has changed.
+        if ((previousValue == null)
+                || (previousValue != null && (!previousValue
+                .getValue().equals(value)))) {
+            Log.d(TAG,
+                    "Previous value: "
+                            + (previousValue != null ? previousValue
+                            .getValue() : "null")
+                            + " New value: " + value);
+
+            DataItem dataItem = dwt.createDataItem(pageName,
+                    item.getName(), item.getType(), value);
+
+            if (isAdHoc) {
+
+                // Check if ad-hoc job and need to set the JobList details
+                String keyword = PageItemProcessor.getStringAttribute(
+                        item, "keyword");
+                if (keyword != null && keyword.equals("true")) {
+                    keyword = value;
+                }
+                String description = PageItemProcessor.getStringAttribute(
+                        item, "adhoc-description");
+                if (description != null && description.equals("true")) {
+                    description = value;
+                }
+
+                Uri dataItemUri = dwt
+                        .storeDataItem(dataItem, keyword, description);
+
+                Log.d(TAG, "Stored dataitem: " + dataItemUri);
+
+            } else {
+                Uri dataItemUri = dwt.storeDataItem(dataItem);
+                Log.d(TAG, "Stored dataitem: " + dataItemUri);
+            }
+        }
+    }
+
+    @Override
 	public DataItem retrieveDataItem(String pageName, String name, String type) {
 		return jobProcessor.retrieveDataItem(pageName, name, type);
 	}
